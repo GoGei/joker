@@ -1,0 +1,7 @@
+{% if form.non_field_errors %}
+    <div class="form-group alert alert-warning">
+        {% for error in form.non_field_errors %}
+            <ul>{{ error }}</ul>
+        {% endfor %}
+    </div>
+{% endif %}

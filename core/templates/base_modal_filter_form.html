@@ -1,0 +1,17 @@
+<div class="modal fade" id="filterForm" tabindex="-1" aria-labelledby="filterFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterFormModalLabel">{{ filter.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% include 'base_filter_form.html' with filter=filter %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary filter-form-button">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

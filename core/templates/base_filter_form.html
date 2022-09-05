@@ -1,0 +1,9 @@
+<form action="{{ filter.action }}" method="get" novalidate class="filter-form">
+    {% csrf_token %}
+    {% include 'base_non_field_error_block.html' %}
+    {% with filter.body.form as form %}
+        {% for field in form %}
+            {% include 'base_form_field.html' with field=field inline_form=inline_form %}
+        {% endfor %}
+    {% endwith %}
+</form>

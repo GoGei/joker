@@ -1,0 +1,7 @@
+[flake8]
+ignore = W504,S308
+exclude = */Utils/*,
+          */migrations/*,
+          */urls.py
+max-complexity = 100
+max-line-length=120

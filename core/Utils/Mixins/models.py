@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from django.conf import settings
+from .exceptions import SlugifyFieldNotSetException
 
 
 class ActiveQuerySet(models.QuerySet):
@@ -74,6 +75,9 @@ class SlugifyMixin(models.Model):
         return not qs.exists()
 
     def assign_slug(self):
+        if not self.SLUGIFY_FIELD:
+            raise SlugifyFieldNotSetException(f'Field for slugify not set!')
+
         slug = slugify(getattr(self, self.SLUGIFY_FIELD))
         self.slug = slug if len(slug) <= 255 else slug[:255]
         self.save()

@@ -19,7 +19,7 @@ add hosts to **/etc/hosts** file:
 ## Database setup
 create DB
 ```sql
-create user joker with password 'password';
+create user joker with password 'password' createdb;
 create database jokerdb with owner joker;
 ```
 

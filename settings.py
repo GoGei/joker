@@ -30,6 +30,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_hosts',
     'widget_tweaks',
+    'core.Utils',
+    'core.User',
+    'core.Joke',
+    'core.Privilege',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +60,8 @@ INTERNAL_IPS = [
 ROOT_URLCONF = 'urls'
 DEFAULT_HOST = 'public'
 ROOT_HOSTCONF = 'hosts'
+
+AUTH_USER_MODEL = 'User.User'
 
 TEMPLATES = [
     {

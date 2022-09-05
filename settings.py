@@ -136,3 +136,30 @@ GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
 }
+
+CKEDITOR_UPLOAD_PATH = os.path.join(BASE_DIR, 'media/ckeditoruploads/')
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+    'admin': {
+        'toolbar': [
+            ['Undo', 'Redo',
+             '-', 'Bold', 'Italic', 'Underline',
+             '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+             '-', 'Outdent', 'Indent',
+             '-', 'Link', 'Unlink',
+             'Format',
+             ],
+            ['HorizontalRule',
+             '-', 'BulletedList', 'NumberedList',
+             '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord',
+             '-', 'SpecialChar',
+             ],
+            ['Maximize']
+        ],
+        'toolbarCanCollapse': True,
+        'width': '100%',
+    }
+}

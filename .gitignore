@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+env/
+.idea/
+
+static/
+media/
+
+config/local_settings.py
+dumps/
+graphs/

@@ -1,0 +1,21 @@
+Django==3.2.12
+django-hosts==5.1
+Fabric3==1.14.post1
+psycopg2-binary==2.9.3
+django-extensions==3.1.5
+django-cors-headers==3.11.0
+
+django-widget-tweaks==1.4.12
+django-ckeditor==6.2.0
+Pillow==9.0.1
+
+djangorestframework==3.13.1
+django-filter==21.1
+markdown==3.3.6
+
+drf_yasg2==1.19.4
+django-debug-toolbar==3.2.4
+
+# loguru==0.6.0
+flake8==4.0.1
+# factory_boy==2.12.0

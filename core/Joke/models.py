@@ -34,7 +34,7 @@ class Joke(CrmMixin, SlugifyMixin):
 
     def assign_slug(self):
         if not self.SLUGIFY_FIELD:
-            raise SlugifyFieldNotSetException(f'Field for slugify not set!')
+            raise SlugifyFieldNotSetException('Field for slugify not set!')
 
         slug = self.slugify_without_html(getattr(self, self.SLUGIFY_FIELD))
         self.slug = slug if len(slug) <= 255 else slug[:255]

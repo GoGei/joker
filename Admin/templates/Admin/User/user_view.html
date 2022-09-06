@@ -1,0 +1,53 @@
+{% extends 'Admin/User/user_base.html' %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active">View</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">ID</div>
+                <div class="col-sm-7">{{ user.id|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Email</div>
+                <div class="col-sm-7">
+                    <a href="mailto:{{ user.email|default:"-" }}">
+                        {{ user.email|default:"-" }}
+                    </a>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Active</div>
+                <div class="col-sm-7">
+                    <input type="checkbox" {% if user.is_active %} checked {% endif %}>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Staff</div>
+                <div class="col-sm-7">
+                    <input type="checkbox" {% if user.is_staff %} checked {% endif %}>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Superuser</div>
+                <div class="col-sm-7">
+                    <input type="checkbox" {% if user.is_superuser %} checked {% endif %}>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a type="button" class="btn btn-info" href="{% url 'users-list' %}">Back to list</a>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(':checkbox').on('click', function (e) {
+            e.preventDefault();
+        });
+    </script>
+
+{% endblock %}

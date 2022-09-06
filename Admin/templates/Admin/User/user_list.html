@@ -1,0 +1,12 @@
+{% extends 'Admin/User/user_base.html' %}
+{% load django_tables2 %}
+
+{% block content %}
+    <div class="card-header">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">{{ table.title }}</div>
+        </div>
+    </div>
+    {% include 'base_filter_form.html' with filter=filter %}
+    {% render_table table.body %}
+{% endblock %}

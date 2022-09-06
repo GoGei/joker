@@ -17,3 +17,15 @@ class UserFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = User
+
+
+class StaffFactory(UserFactory):
+    is_active = True
+    is_staff = True
+    is_superuser = False
+
+
+class SuperuserFactory(UserFactory):
+    is_active = True
+    is_staff = True
+    is_superuser = True

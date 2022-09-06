@@ -1,4 +1,5 @@
-from factory import fuzzy, faker, SubFactory, DjangoModelFactory
+from factory import fuzzy, faker, SubFactory, DjangoModelFactory, LazyAttribute
+from django.utils.text import slugify
 from django.utils import timezone
 from .models import Joke, JokeSeen, JokeLikeStatus
 
@@ -8,6 +9,7 @@ class JokeFactory(DjangoModelFactory):
         model = Joke
 
     text = faker.Faker('paragraph', nb_sentences=5)
+    slug = LazyAttribute(lambda obj: slugify(obj.text)[:255])
 
 
 class JokeSeenFactory(DjangoModelFactory):

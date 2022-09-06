@@ -11,3 +11,12 @@ class JokesTable(tables.Table):
         model = Joke
         fields = ('pk', 'text_start', 'is_active', 'actions')
         template_name = "django_tables2/bootstrap4.html"
+
+
+class JokesTopTable(tables.Table):
+    text_start = tables.TemplateColumn(template_name='Admin/Joke/joke_text_start.html', orderable=False)
+
+    class Meta:
+        model = Joke
+        fields = ('pk', 'text_start', 'likes')
+        template_name = "django_tables2/bootstrap4.html"

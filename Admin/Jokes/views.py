@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 
 from core.Utils.Access.decorators import manager_required, superuser_required
 from core.Joke.models import Joke
 from .forms import JokeFilterForm, JokeAddForm, JokeEditForm
-from .tables import JokesTable
+from .tables import JokesTable, JokesTopTable
 
 
 @manager_required
@@ -32,6 +33,25 @@ def jokes_list(request):
     return render(request, 'Admin/Joke/joke_list.html',
                   {'table': table,
                    'filter': table_filter})
+
+
+@manager_required
+def jokes_top_list(request):
+    jokes = Joke.objects.annotate(
+        likes=Count('jokelikestatus', filter=Q(jokelikestatus__is_liked=True))
+    ).order_by('-likes').all()
+
+    table_body = JokesTopTable(jokes)
+    page = request.GET.get("page", 1)
+    table_body.paginate(page=page, per_page=settings.ITEMS_PER_PAGE)
+
+    table = {
+        'pk': 'Top jokes',
+        'body': table_body
+    }
+
+    return render(request, 'Admin/Joke/joke_top_list.html',
+                  {'table': table})
 
 
 @manager_required

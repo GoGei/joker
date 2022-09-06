@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django_hosts',
     'widget_tweaks',
     'django_tables2',
+    'rest_framework',
+    'django_filters',
     'ckeditor',
     'ckeditor_uploader',
     'core.Utils',
@@ -185,3 +187,12 @@ CKEDITOR_CONFIGS = {
 }
 
 ITEMS_PER_PAGE = 20
+
+REST_FRAMEWORK = {
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_PERMISSION_CLASSES': [
+        'Api.permissions.IsStaffUserPermission'
+    ]
+}

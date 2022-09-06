@@ -3,7 +3,7 @@ from django import forms
 from django.db.models import Q
 
 
-class BaseFilter(django_filters.FilterSet):
+class BaseFilterForm(django_filters.FilterSet):
     BASE_FILTER_FIELDS = ['is_active', 'search']
     SEARCH_FIELDS = []
     is_active = django_filters.ChoiceFilter(label='Is active', empty_label='Not selected', method='is_active_filter',

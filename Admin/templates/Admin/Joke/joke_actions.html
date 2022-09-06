@@ -1,0 +1,8 @@
+<a href="{% url 'jokes-edit' record.slug %}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+{% if record.is_active %}
+    <a href="{% url 'jokes-archive' record.slug %}" class="btn btn-warning"><i class="fa fa-trash"></i></a>
+{% else %}
+    <a href="{% url 'jokes-restore' record.slug %}" class="btn btn-info"><i class="fa fa-reply"></i></a>
+{% endif %}
+<a href="{% url 'jokes-delete' record.slug %}" class="btn btn-danger"><i class="fa fa-close"></i></a>
+<a href="{% url 'jokes-view' record.slug %}" class="btn btn-secondary"><i class="fa fa-eye"></i></a>

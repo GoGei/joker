@@ -3,7 +3,8 @@
     {% include 'base_non_field_error_block.html' %}
     {% with filter.body.form as form %}
         {% for field in form %}
-            {% include 'base_form_field.html' with field=field inline_form=inline_form %}
+            {% include 'base_form_field.html' with field=field inline_form=filter.inline_form %}
         {% endfor %}
     {% endwith %}
+    <input type="submit" value="Filter" name="_filter" class="btn btn-success btn-lg float-right">
 </form>

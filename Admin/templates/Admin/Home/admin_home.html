@@ -1,0 +1,27 @@
+{% extends 'Admin/admin_base.html' %}
+{% load static %}
+
+{% block home-menu-active %} active {% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block head-label %}
+    <div class="d-flex justify-content-center">
+        <h1>Welcome, Joker</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <img class="mb-4" src="{% static 'images/admin/login_icon.jpg' %}" alt="" width="500" height="500">
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(document).ready(function () {
+            $('.breadcrumb').removeClass('breadcrumb');
+        })
+    </script>
+{% endblock %}

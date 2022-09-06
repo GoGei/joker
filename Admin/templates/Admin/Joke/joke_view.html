@@ -1,0 +1,27 @@
+{% extends 'Admin/Joke/joke_base.html' %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active">View</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">ID</div>
+                <div class="col-sm-7">{{ joke.id|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Slug</div>
+                <div class="col-sm-7">{{ joke.slug|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Joke</div>
+                <div class="col-sm-7">{{ joke.text|default:"-"|safe|escape }}</div>
+            </div>
+        </div>
+    </div>
+    <a type="button" class="btn btn-info" href="{% url 'jokes-edit' joke.slug %}">Edit</a>
+    <a type="button" class="btn btn-info" href="{% url 'jokes-list' %}">Back to list</a>
+{% endblock %}

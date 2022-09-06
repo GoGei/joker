@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_hosts',
     'widget_tweaks',
+    'django_tables2',
+    'ckeditor',
+    'ckeditor_uploader',
     'core.Utils',
     'core.User',
     'core.Joke',
@@ -180,3 +183,5 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     }
 }
+
+ITEMS_PER_PAGE = 20

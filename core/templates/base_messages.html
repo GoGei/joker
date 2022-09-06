@@ -1,0 +1,12 @@
+{% load filters %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            {% get_message_class message.tags as alert_class %}
+            <div class="alert {{ alert_class }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </ul>
+{% endif %}

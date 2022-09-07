@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'rest_framework',
     'django_filters',
+    'drf_yasg2',
     'ckeditor',
     'ckeditor_uploader',
     'core.Utils',

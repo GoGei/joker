@@ -8,7 +8,7 @@ from Api.base_views import MappedSerializerVMixin, ApiActions
 
 from core.User.models import User
 from .serializers import (
-    UserSerializer, UserSerializerListSerializer, UserSerializerViewSerializer, UserSetPassword,
+    UserSerializer, UserSerializerListSerializer, UserSerializerViewSerializer, UserSetPasswordSerialzier,
     UserAdminViewSerializer
 )
 
@@ -25,15 +25,15 @@ class UserViewSet(viewsets.ModelViewSet, MappedSerializerVMixin):
     serializer_map = {
         ApiActions.LIST: UserSerializerListSerializer,
         ApiActions.RETRIEVE: UserSerializerViewSerializer,
+        'set_password': UserSetPasswordSerialzier
     }
-    empty_serializers = ('set_password',)
 
     class Meta:
         model = User
 
     @action(detail=True, methods=['post'], url_path='set-password', url_name='set-password')
     def set_password(self, request, pk=None):
-        serializer = self.get_serializer()
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 

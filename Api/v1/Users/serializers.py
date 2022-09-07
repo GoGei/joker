@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.Utils.fields import PasswordValidators
+from core.Utils.validators import PasswordValidators
 from core.User.models import User
 
 
@@ -50,7 +50,7 @@ class UserSerializerViewSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class UserSetPassword(serializers.Serializer):
+class UserSetPasswordSerialzier(serializers.Serializer):
     password = serializers.CharField(validators=PasswordValidators)
     repeat_password = serializers.CharField(validators=PasswordValidators)
 

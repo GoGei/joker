@@ -27,7 +27,6 @@ def jokes_list(request):
         'pk': 'Joke filter',
         'body': joke_filter,
         'action': reverse('jokes-list'),
-        'inline_form': True
     }
 
     return render(request, 'Admin/Joke/joke_list.html',
@@ -68,7 +67,8 @@ def jokes_add(request):
 
     form = {
         'body': form_body,
-        'buttons': {'save': True, 'cancel': True}
+        'buttons': {'save': True, 'cancel': True},
+        'inline_form': True
     }
 
     return render(request, 'Admin/Joke/joke_add.html',
@@ -93,7 +93,8 @@ def jokes_edit(request, joke_slug):
 
     form = {
         'body': form_body,
-        'buttons': {'save': True, 'cancel': True}
+        'buttons': {'save': True, 'cancel': True},
+        'inline_form': True
     }
     return render(request, 'Admin/Joke/joke_edit.html',
                   {'form': form})
@@ -124,6 +125,6 @@ def jokes_restore(request, joke_slug):
 @superuser_required
 def jokes_delete(request, joke_slug):
     joke = get_object_or_404(Joke, slug=joke_slug)
-    joke.delete()
     messages.success(request, f'Joke {joke.pk} deleted')
+    joke.delete()
     return redirect(reverse('jokes-list'), host='admin')

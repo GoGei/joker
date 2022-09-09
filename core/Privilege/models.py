@@ -3,10 +3,13 @@ from core.Utils.Mixins.models import CrmMixin
 
 
 class PrivilegeUser(CrmMixin):
-    user = models.ForeignKey('User.User', on_delete=models.CASCADE)
+    user = models.OneToOneField('User.User', on_delete=models.CASCADE, db_index=True)
 
     class Meta:
         db_table = 'privilege_user'
+
+    def __str__(self):
+        return f'{self.user.label}'
 
     @property
     def label(self):

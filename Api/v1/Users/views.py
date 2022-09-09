@@ -54,3 +54,15 @@ class UserAdminViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
 
     class Meta:
         model = User
+
+    def get_queryset(self):
+        queryset = self.queryset
+        params = self.request.query_params
+
+        to_exclude = params.get('to_exclude')
+        print('to_exclude', to_exclude)
+        if to_exclude:
+            to_exclude = to_exclude.split(',')
+            queryset = queryset.exclude(id__in=to_exclude)
+
+        return queryset

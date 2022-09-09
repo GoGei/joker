@@ -51,7 +51,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link {% block privilege-user-menu-active %}{% endblock %}"
+                           href="{% url 'privileged-user-list' %}">
                             <i class="fa-sharp fa-solid fa-star fa-lg"></i> Privileged users
                         </a>
                     </li>
@@ -86,6 +87,8 @@
 <script src="{% static 'js/select2.min.js' %}"></script>
 <script src="{% static 'js/holder.min.js' %}"></script>
 <script src="{% static 'js/jquery.inputmask.min.js' %}"></script>
+
+<script src="{% static 'js/admin/scripts.js' %}"></script>
 
 {% block extrajs %}
 {% endblock %}

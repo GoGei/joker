@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.test import Client
 from django_hosts import reverse
 
-from core.User.factories import SuperuserFactory
+from core.User.models import User
+from core.User.factories import SuperuserFactory, UserFactory
 
 
 class JokeViewTestCase(TestCase):
@@ -23,6 +24,14 @@ class JokeViewTestCase(TestCase):
         self.assertContains(response, self.user.id)
 
     def test_users_view_get_200(self):
-        response = self.client.post(reverse('users-view', host='admin', args=[self.user.id]), HTTP_HOST='admin')
+        response = self.client.post(reverse('users-view', host='admin', args=[self.user.id]), HTTP_HOST='admin',
+                                    format='json')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user)
+
+    def test_jokes_delete_success(self):
+        user = UserFactory.create()
+        response = self.client.post(reverse('users-delete', host='admin', args=[user.id]), HTTP_HOST='admin',
+                                    format='json')
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(User.objects.filter(pk=user.pk).exists())

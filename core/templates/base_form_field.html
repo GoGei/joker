@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 
-<div class="form-group row {% if field.errors %}has-error{% endif %} {% if field.is_hidden %}d-none{% endif %}">
+<div class="form-group {% if inline_form %}row{% endif %} {% if field.errors %}has-error{% endif %} {% if field.is_hidden %}d-none{% endif %}">
     <label for="{{ field.id_for_label }}" class="{% if inline_form %}col-sm-2 col-form-label{% endif %}">
         {% if field.field.required %}
             <strong>{{ field.label }}*</strong>

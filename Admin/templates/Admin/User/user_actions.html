@@ -1,1 +1,4 @@
+{% if user.is_superuser %}
+    <a href="{% url 'users-delete' record.pk %}" class="btn btn-danger"><i class="fa fa-close"></i></a>
+{% endif %}
 <a href="{% url 'users-view' record.pk %}" class="btn btn-secondary"><i class="fa fa-eye"></i></a>

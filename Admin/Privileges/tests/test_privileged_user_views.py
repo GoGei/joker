@@ -22,10 +22,10 @@ class PrivilegeUsersViewTestCase(TestCase):
 
         self.privileged_user = PrivilegeUserFactory.create()
         self.data = {
-            'user': UserFactory.create().id
+            'user': UserFactory.create(email='example@gmail.com').id
         }
         self.error_data = {
-            'user': SuperuserFactory.create().id
+            'user': SuperuserFactory.create(email='superuser@gmail.com').id
         }
 
     def test_privileged_users_list_get_success(self):

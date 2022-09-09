@@ -19,11 +19,11 @@ def privilege_user_list(request):
     table_body.paginate(page=page, per_page=settings.ITEMS_PER_PAGE)
 
     table = {
-        'pk': 'Privilege user Data Table',
+        'title': 'Privilege user Data Table',
         'body': table_body
     }
     table_filter = {
-        'pk': 'Privilege user filter',
+        'title': 'Privilege user filter',
         'body': privileged_user_filter,
         'action': reverse('privileged-user-list'),
     }
@@ -33,7 +33,7 @@ def privilege_user_list(request):
                    'filter': table_filter})
 
 
-@manager_required
+@superuser_required
 def privilege_user_add(request):
     if '_cancel' in request.POST:
         return redirect(reverse('privileged-user-list'), host='admin')
@@ -55,10 +55,11 @@ def privilege_user_add(request):
                   {'form': form})
 
 
-@manager_required
+@superuser_required
 def privilege_user_view(request, privileged_user_id):
     privileged_user = get_object_or_404(PrivilegeUser, pk=privileged_user_id)
-    return render(request, 'Admin/PrivilegeUser/privileged_user_view.html', {'privileged_user': privileged_user})
+    return render(request, 'Admin/PrivilegeUser/privileged_user_view.html',
+                  {'privileged_user': privileged_user})
 
 
 @superuser_required

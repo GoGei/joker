@@ -19,11 +19,11 @@ def users_list(request):
     table_body.paginate(page=page, per_page=settings.ITEMS_PER_PAGE)
 
     table = {
-        'pk': 'User Data Table',
+        'title': 'User Data Table',
         'body': table_body
     }
     table_filter = {
-        'pk': 'User filter',
+        'title': 'User filter',
         'body': user_filter,
         'action': reverse('users-list'),
     }

@@ -1,0 +1,15 @@
+{% extends 'Admin/PrivilegeUser/PrivilegeMessage/privilege_message_base.html' %}
+{% load django_tables2 %}
+
+{% block content %}
+    <div class="card-header">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">{{ table.title }}</div>
+            <div>
+                <a type="button" class="btn btn-success" href="{% url 'privilege-message-add' privilege_user.id %}">Add</a>
+                <a type="button" class="btn btn-info" href="{% url 'privileged-user-list' %}">Back to privileged users</a>
+            </div>
+        </div>
+    </div>
+    {% render_table table.body %}
+{% endblock %}

@@ -44,13 +44,6 @@ class PrivilegeUserForm(forms.ModelForm):
 
         return user
 
-    def save(self, commit=True):
-        instance = super(PrivilegeUserForm, self).save(commit=commit)
-
-        if commit:
-            instance.save()
-        return instance
-
 
 class PrivilegeUserAddForm(PrivilegeUserForm):
     pass

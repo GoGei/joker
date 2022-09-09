@@ -1,0 +1,22 @@
+{% extends 'Admin/PrivilegeUser/PrivilegeMessage/privilege_message_base.html' %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active">View</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">ID</div>
+                <div class="col-sm-7">{{ privilege_message.id|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Message</div>
+                <div class="col-sm-7">{{ privilege_message.message|default:"-"|safe|escape }}</div>
+            </div>
+        </div>
+    </div>
+    <a type="button" class="btn btn-info" href="{% url 'privilege-message-list' privilege_user.pk %}">Back to list</a>
+{% endblock %}

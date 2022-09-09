@@ -20,11 +20,11 @@ def jokes_list(request):
     table_body.paginate(page=page, per_page=settings.ITEMS_PER_PAGE)
 
     table = {
-        'pk': 'Joke Data Table',
+        'title': 'Joke Data Table',
         'body': table_body
     }
     table_filter = {
-        'pk': 'Joke filter',
+        'title': 'Joke filter',
         'body': joke_filter,
         'action': reverse('jokes-list'),
     }
@@ -45,7 +45,7 @@ def jokes_top_list(request):
     table_body.paginate(page=page, per_page=settings.ITEMS_PER_PAGE)
 
     table = {
-        'pk': 'Top jokes',
+        'title': 'Top jokes',
         'body': table_body
     }
 

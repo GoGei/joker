@@ -1,0 +1,10 @@
+{% extends 'Admin/PrivilegeUser/privilaged_user_subviews_base.html' %}
+
+{% block head-label %}
+    Messages
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active"><a href="{% url 'privilege-message-list' privilege_user.id %}">Message</a></li>
+{% endblock %}

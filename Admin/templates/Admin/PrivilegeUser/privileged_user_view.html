@@ -14,5 +14,29 @@
             </div>
         </div>
     </div>
-    <a type="button" class="btn btn-info" href="{% url 'privileged-user-list' %}">Back to list</a>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel blank-panel">
+                <div class="panel-heading">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs nav-lang mb-4">
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="{% url 'privileged-user-list' %}" aria-expanded="true">
+                                    <span class="lang-name">Back to list</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   href="{% url 'privilege-message-list' privileged_user.id %}" aria-expanded="true">
+                                    <span class="lang-name">Messages</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

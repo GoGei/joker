@@ -1,0 +1,12 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block privilege-user-menu-active %} active {% endblock %}
+
+{% block head-label %}
+    Privileges
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'privileged-user-list' %}">Privileged user</a></li>
+{% endblock %}

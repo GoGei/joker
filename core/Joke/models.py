@@ -18,7 +18,7 @@ class Joke(CrmMixin, SlugifyMixin):
         return str(self)
 
     def __str__(self):
-        return self.text
+        return self.slug
 
     @classmethod
     def slugify_without_html(cls, value):
@@ -39,6 +39,21 @@ class Joke(CrmMixin, SlugifyMixin):
         slug = self.slugify_without_html(getattr(self, self.SLUGIFY_FIELD))
         self.slug = slug if len(slug) <= 255 else slug[:255]
         self.save()
+        return self
+
+    def like(self, user):
+        like_status, _ = JokeLikeStatus.objects.get_or_create(joke=self, user=user)
+        like_status.like()
+        return self
+
+    def dislike(self, user):
+        like_status, _ = JokeLikeStatus.objects.get_or_create(joke=self, user=user)
+        like_status.dislike()
+        return self
+
+    def deactivate(self, user):
+        like_status, _ = JokeLikeStatus.objects.get_or_create(joke=self, user=user)
+        like_status.deactivate()
         return self
 
 

@@ -53,7 +53,7 @@ class JokeViewTestCase(TestCase):
         response = self.client.get(reverse('jokes-edit', host='admin', args=[self.joke.slug]), HTTP_HOST='admin',
                                    format='json')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.joke)
+        self.assertContains(response, self.joke.text)
 
     def test_jokes_edit_post_success(self):
         data = self.data.copy()
@@ -74,7 +74,7 @@ class JokeViewTestCase(TestCase):
         response = self.client.post(reverse('jokes-view', host='admin', args=[self.joke.slug]), HTTP_HOST='admin',
                                     format='json')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.joke)
+        self.assertContains(response, self.joke.pk)
 
     def test_jokes_archive_success(self):
         response = self.client.post(reverse('jokes-archive', host='admin', args=[self.joke.slug]), HTTP_HOST='admin',

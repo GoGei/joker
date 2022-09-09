@@ -13,6 +13,9 @@ class ApiActions(object):
     DESTROY = 'destroy'
     LIST = 'list'
 
+    ARCHIVE = 'archive'
+    RESTORE = 'restore'
+
 
 class MappedSerializerVMixin(viewsets.GenericViewSet):
     """
@@ -39,6 +42,7 @@ class ArchiveRestoreMixin(MappedSerializerVMixin):
     Implement functionality of archive/restore action from
     core.Utils.Mixins.models.CrmMixin archive/restore actions
     """
+    empty_serializers = (ApiActions.ARCHIVE, ApiActions.RESTORE)
 
     @action(methods=['post'], detail=True, url_path='archive', url_name='archive')
     def archive(self, request, pk=None):

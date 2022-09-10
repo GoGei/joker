@@ -1,0 +1,15 @@
+{% extends 'Public/public_base.html' %}
+
+{% load static %}
+
+{% block home-menu-navbar %} active {% endblock %}
+
+{% block content %}
+    <div class="starter-template">
+        <h1>This is your daily dose of jokes!</h1>
+        <p class="lead">Go to the all jokes and enjoy it!</p>
+        <div class="d-flex justify-content-center">
+        <img class="mb-4" src="{% static 'images/public/home_icon.jpg' %}" alt="" width="500" height="500">
+    </div>
+    </div>
+{% endblock %}

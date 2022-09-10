@@ -1,0 +1,14 @@
+{% extends 'Public/public_base.html' %}
+
+{% block all-jokes-menu-navbar %} active {% endblock %}
+
+{% block content %}
+    <div>
+        <h1>All jokes</h1>
+    </div>
+    <div>
+        {% for joke in jokes %}
+            {% include 'Public/joke_card.html' with foke=joke %}
+        {% endfor %}
+    </div>
+{% endblock %}

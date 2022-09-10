@@ -1,7 +1,42 @@
 body {
-  padding-top: 5rem;
+    padding-top: 5rem;
 }
+
 .starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.button-reaction {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.button-like {
+    color: green;
+}
+
+.button-dislike {
+    color: red;
+}
+
+.button-like-status {
+    color: blue;
+}
+
+a.btn {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.telegram-css {
+    color: #0088CC;
+}
+
+.viber-css {
+    color: #7360F2;
+}
+
+.whatsapp-css {
+    color: #25D366;
 }

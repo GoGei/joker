@@ -34,6 +34,9 @@
             <li class="nav-item {% block top-jokes-menu-navbar %}{% endblock %}">
                 <a class="nav-link" href="{% url 'home-top-jokes' %}">Top jokes</a>
             </li>
+            <li class="nav-item {% block liked-jokes-menu-navbar %}{% endblock %}">
+                <a class="nav-link" href="{% url 'home-liked-jokes' %}">My favourite jokes</a>
+            </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">

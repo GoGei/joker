@@ -1,6 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db import models
-from core.Joke.models import Joke
+from core.Joke.models import Joke, JokeLikeStatus
 
 
 def home_view(request):
@@ -18,3 +19,11 @@ def home_top_jokes_view(request):
     jokes = jokes.filter(~models.Q(likes=0))
     jokes = jokes.order_by('likes')
     return render(request, 'Public/Home/public_top_jokes.html', {'jokes': jokes})
+
+
+@login_required
+def home_liked_views(request):
+    user = request.user
+    liked = JokeLikeStatus.objects.select_related('joke', 'user').filter(user=user, is_liked=True).all()
+    jokes = Joke.objects.filter(id__in=liked.values_list('joke', flat=True))
+    return render(request, 'Public/Home/public_liked_jokes.html', {'jokes': jokes})

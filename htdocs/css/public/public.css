@@ -7,6 +7,10 @@ body {
     text-align: center;
 }
 
+.card {
+    margin: 50px;
+}
+
 .button-reaction {
     margin-top: 0;
     margin-bottom: 0;

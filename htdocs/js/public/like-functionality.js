@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    let $modal = $('#notLoggedUserModalId');
+
     $('.button-like-js').click(function (event) {
         event.preventDefault();
         let $current = $(this)
@@ -17,7 +19,7 @@ $(document).ready(function () {
                 error: function (jqXhr, textStatus, errorMessage) {
                     let status = jqXhr.status;
                     if (status == 403) {
-                        alert('You should be logged in to like the joke');
+                        $modal.modal('show');
                     } else {
                         alert(errorMessage);
                     }
@@ -56,7 +58,7 @@ $(document).ready(function () {
                 error: function (jqXhr, textStatus, errorMessage) {
                     let status = jqXhr.status;
                     if (status == 403) {
-                        alert('You should be logged in to like the joke');
+                        $modal.modal('show');
                     } else {
                         alert(errorMessage);
                     }

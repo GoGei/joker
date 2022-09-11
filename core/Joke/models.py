@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.html import strip_tags
@@ -55,6 +56,16 @@ class Joke(CrmMixin, SlugifyMixin):
         like_status, _ = JokeLikeStatus.objects.get_or_create(joke=self, user=user)
         like_status.deactivate()
         return self
+
+    @classmethod
+    def annotate_qs_by_user(cls, qs, user=None):
+        if not (user and user.is_authenticated):
+            return qs
+
+        qs = qs.annotate(is_liked=RawSQL(
+            'select is_liked from joke_like_status where user_id=%s AND joke_id=joke.id', (user.id,)
+        ))
+        return qs
 
 
 class JokeSeen(models.Model):

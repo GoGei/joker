@@ -15,12 +15,6 @@ class PrivilegeUserFilterForm(BaseSearchFilterMixin):
 
 
 class PrivilegeUserForm(forms.ModelForm):
-    excluded_users = forms.CharField(required=False,
-                                     widget=forms.HiddenInput(attrs={
-                                         'name': 'hidden_exclude_users',
-                                         'value': ','.join(map(str, PrivilegeUser.objects.all()
-                                                               .values_list('user_id', flat=True)))
-                                     }))
     user = forms.ModelChoiceField(label='Privileged user',
                                   queryset=User.objects.filter(is_active=True, is_superuser=False),
                                   empty_label='Select a user',

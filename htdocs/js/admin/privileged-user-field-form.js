@@ -3,9 +3,6 @@ Users = {};
 (function (obj, $) {
     function init() {
         let $users = $('#id_user');
-        let $exclude_users = $('input#id_excluded_users');
-        let to_exclude = $exclude_users.val();
-        console.log(to_exclude)
 
         $users.select2({
             allowClear: true,
@@ -20,7 +17,7 @@ Users = {};
                         search: params.term,
                         page: params.page,
                         format: 'json',
-                        to_exclude: to_exclude
+                        unprivileged: true
                     }
                 },
                 processResults: function (data, params) {

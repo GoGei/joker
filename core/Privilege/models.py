@@ -17,7 +17,7 @@ class PrivilegeUser(CrmMixin):
 
 
 class PrivilegeMessage(models.Model):
-    privilege_user = models.ForeignKey(PrivilegeUser, on_delete=models.PROTECT)
+    privilege_user = models.ForeignKey(PrivilegeUser, on_delete=models.CASCADE)
     message = models.CharField(max_length=1024)
 
     class Meta:

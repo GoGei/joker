@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from Api.base_views import MappedSerializerVMixin, ApiActions
 
 from core.User.models import User
+from core.Privilege.models import PrivilegeUser
 from .serializers import (
     UserSerializer, UserSerializerListSerializer, UserSerializerViewSerializer, UserSetPasswordSerialzier,
     UserAdminViewSerializer
@@ -59,9 +60,9 @@ class UserAdminViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         queryset = self.queryset
         params = self.request.query_params
 
-        to_exclude = params.get('to_exclude')
-        if to_exclude:
-            to_exclude = to_exclude.split(',')
-            queryset = queryset.exclude(id__in=to_exclude)
+        unprivileged = params.get('unprivileged')
+        if unprivileged:
+            privileged = PrivilegeUser.objects.all().values_list('user_id', flat=True)
+            queryset = queryset.exclude(id__in=privileged)
 
         return queryset

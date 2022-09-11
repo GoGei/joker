@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db import models
+from django.db.models.expressions import RawSQL
 from core.Joke.models import Joke, JokeLikeStatus
 
 
@@ -14,10 +15,12 @@ def home_all_jokes_view(request):
 
 
 def home_top_jokes_view(request):
-    jokes = Joke.objects.prefetch_related('jokelikestatus_set').active().all()
-    jokes = jokes.annotate(likes=models.Count('jokelikestatus'))
+    jokes = Joke.objects.active().all()
+    jokes = jokes.annotate(likes=RawSQL(
+        'select count(id) from joke_like_status where joke_id=joke.id AND is_liked=True', ()
+    ))
     jokes = jokes.filter(~models.Q(likes=0))
-    jokes = jokes.order_by('likes')
+    jokes = jokes.order_by('-likes')
     return render(request, 'Public/Home/public_top_jokes.html', {'jokes': jokes})
 
 

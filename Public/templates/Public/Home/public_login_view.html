@@ -1,0 +1,38 @@
+{% extends 'Public/public_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block account-login %} active {% endblock %}
+
+{% block extracss %}
+    <link href="{% static 'css/public/login.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <form class="form-signin" method="post" novalidate>
+        {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal d-flex ">Please sign in</h1>
+
+        {% if form.non_field_errors %}
+            <div class="form-group alert alert-warning">
+                {% for error in form.non_field_errors %}
+                    <ul class="list-unstyled">
+                        <li>{{ error }}</li>
+                    </ul>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% with form.email as field %}
+            {% include 'base_form_render_field.html' %}
+            {% include 'base_field_error_block.html' %}
+        {% endwith %}
+
+        {% with form.password as field %}
+            {% include 'base_form_render_field.html' %}
+            {% include 'base_field_error_block.html' %}
+        {% endwith %}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+{% endblock %}

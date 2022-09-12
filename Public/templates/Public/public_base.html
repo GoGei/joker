@@ -18,6 +18,9 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/public/public.css' %}" rel="stylesheet">
+
+    {% block extracss %}
+    {% endblock %}
 </head>
 
 <body>
@@ -34,13 +37,24 @@
             <li class="nav-item {% block top-jokes-menu-navbar %}{% endblock %}">
                 <a class="nav-link" href="{% url 'home-top-jokes' %}">Top jokes</a>
             </li>
-            <li class="nav-item {% block liked-jokes-menu-navbar %}{% endblock %}">
-                <a class="nav-link" href="{% url 'home-liked-jokes' %}">My favourite jokes</a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item {% block liked-jokes-menu-navbar %}{% endblock %}">
+                    <a class="nav-link" href="{% url 'home-liked-jokes' %}">My favourite jokes</a>
+                </li>
+            {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home-logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item {% block account-login %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'home-login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
         </form>
     </div>
 </nav>

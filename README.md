@@ -26,7 +26,7 @@ create database jokerdb with owner joker;
 ## Env setup
 create virtual env
 ```bash
-python3 -m venv env
+python3.8 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
 ./manage.py migrate

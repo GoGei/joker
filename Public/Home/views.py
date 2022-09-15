@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db import models
 from django.db.models.expressions import RawSQL
-from core.Joke.models import Joke, JokeLikeStatus
+from core.Joke.models import Joke, JokeLikeStatus, JokeSeen
 
 
 def home_view(request):
@@ -33,3 +33,12 @@ def home_liked_views(request):
     jokes = Joke.objects.filter(id__in=liked.values_list('joke', flat=True))
     jokes = Joke.annotate_qs_by_user(jokes, request.user)
     return render(request, 'Public/Home/public_liked_jokes.html', {'jokes': jokes})
+
+
+def home_seen_views(request):
+    user = request.user
+    liked = JokeSeen.objects.select_related('joke', 'user').filter(user=user).order_by(
+        'seen_stamp').all()
+    jokes = Joke.objects.filter(id__in=liked.values_list('joke', flat=True))
+    jokes = Joke.annotate_qs_by_user(jokes, request.user)
+    return render(request, 'Public/Home/public_seen_jokes.html', {'jokes': jokes})

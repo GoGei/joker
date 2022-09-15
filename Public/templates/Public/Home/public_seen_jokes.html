@@ -1,10 +1,10 @@
 {% extends 'Public/public_base.html' %}
 
-{% block all-jokes-menu-navbar %} active {% endblock %}
+{% block seen-jokes-menu-navbar %} active {% endblock %}
 
 {% block content %}
     <div class="d-flex justify-content-center">
-        <h1>All jokes</h1>
+        <h1>Seen jokes</h1>
     </div>
     <div>
         {% for joke in jokes %}

@@ -42,6 +42,11 @@
                     <a class="nav-link" href="{% url 'home-liked-jokes' %}">My favourite jokes</a>
                 </li>
             {% endif %}
+            {% if user.is_authenticated %}
+                <li class="nav-item {% block seen-jokes-menu-navbar %}{% endblock %}">
+                    <a class="nav-link" href="{% url 'home-seen-jokes' %}">My seen jokes</a>
+                </li>
+            {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-auto">

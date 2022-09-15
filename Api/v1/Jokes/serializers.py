@@ -21,10 +21,11 @@ class JokeSeenSerializer(serializers.Serializer):
     seen_jokes = serializers.CharField(allow_blank=True, required=False)
 
     def validate(self, data):
-        seen_jokes = data.get('seen_jokes').split(',')
-        for pk in seen_jokes:
-            try:
-                Joke.objects.get(pk=pk)
-            except Joke.DoesNotExist:
-                raise serializers.ValidationError({'seen_jokes': 'Joke with ID %s does not found!' % pk})
+        seen_jokes = data.get('seen_jokes')
+        if seen_jokes:
+            for pk in seen_jokes.split(','):
+                try:
+                    Joke.objects.get(pk=pk)
+                except Joke.DoesNotExist:
+                    raise serializers.ValidationError({'seen_jokes': 'Joke with ID %s does not found!' % pk})
         return data

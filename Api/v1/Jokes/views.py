@@ -68,6 +68,7 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
 
             if not queryset.exists():
                 user.jokeseen_set.all().delete()
+                print('All seen removed')
         else:
             serializer = self.get_serializer(data=self.request.query_params)
             serializer.is_valid(raise_exception=True)
@@ -79,7 +80,8 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
                 queryset = queryset.exclude(id__in=seen_jokes)
 
         if not queryset.exists():
-            return Response({'There are no jokes left you have not seen'},
+            return Response({'text': 'There are no jokes left you have not seen',
+                             'all_jokes_seen': True},
                             status=status.HTTP_200_OK)
 
         joke = queryset[randint(0, queryset.count() - 1)]
@@ -87,4 +89,6 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
             JokeSeen.objects.create(joke=joke, user=user)
 
         serializer = JokeSerializer(joke)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = serializer.data.copy()
+        data.update({'add_to_cache': not user.is_authenticated})
+        return Response(data, status=status.HTTP_200_OK)

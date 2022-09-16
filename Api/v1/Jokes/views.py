@@ -70,13 +70,13 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
                 user.jokeseen_set.all().delete()
                 print('All seen removed')
         else:
-            serializer = self.get_serializer(data=self.request.query_params)
+            serializer = self.get_serializer(data=self.request.GET)
             serializer.is_valid(raise_exception=True)
             seen_jokes = serializer.validated_data.get('seen_jokes')
 
             queryset = self.get_queryset()
             if seen_jokes:
-                seen_jokes = seen_jokes.split(',')
+                seen_jokes = list(map(int, seen_jokes.split(',')))
                 queryset = queryset.exclude(id__in=seen_jokes)
 
         if not queryset.exists():

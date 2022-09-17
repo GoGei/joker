@@ -199,3 +199,10 @@ REST_FRAMEWORK = {
         'Api.permissions.IsStaffUserPermission'
     ]
 }
+
+CELERY_RESULT_BACKEND = 'rpc'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_TASK_RESULT_EXPIRES = 60

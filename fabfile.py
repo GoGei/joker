@@ -37,6 +37,11 @@ def runserver():
 
 
 @task
+def celeryd():
+    local('celery -A celery_runner worker -l DEBUG')
+
+
+@task
 def dump_db(user='postgres'):
     db_name = dj_settings.DATABASES['default']['NAME']
 

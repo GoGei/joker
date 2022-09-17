@@ -14,3 +14,6 @@ djangorestframework==3.13.1
 django-filter==21.1
 markdown==3.3.6
 drf_yasg2==1.19.4
+
+celery==5.2.7
+redis==4.3.4

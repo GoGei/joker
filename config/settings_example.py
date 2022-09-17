@@ -23,5 +23,4 @@ if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS += ['debug_toolbar']
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
-
 GRAPH_MODELS['all_applications'] = [app for app in INSTALLED_APPS if app.startswith('core.')]

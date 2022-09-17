@@ -216,3 +216,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'healthcalendar.emailer@gmail.com'
 DEFAULT_FROM_EMAIL = 'healthcalendar.emailer@gmail.com'
 EMAIL_HOST_PASSWORD = '<PASSWORD OR SECURITY CODE OF APP>'
+
+# senders
+TELEGRAM_API_KEY = ''
+TELEGRAM_API_HASH = ''
+TELEGRAM_BOT_TOKEN = ''

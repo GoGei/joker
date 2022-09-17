@@ -28,3 +28,7 @@ if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 GRAPH_MODELS['all_applications'] = [app for app in INSTALLED_APPS if app.startswith('core.')]
+
+# https://my.telegram.org/apps
+TELEGRAM_API_KEY = '<your telegram api key>>'
+TELEGRAM_API_HASH = '<your telegram api hash>'

@@ -19,6 +19,10 @@ PARENT_HOST = ".%s" % SITE_URL
 HOST_PORT = '1111'
 SITE = "%s://%s:%s" % (SITE_SCHEME, SITE_URL, HOST_PORT)
 
+EMAIL_HOST_USER = 'healthcalendar.emailer@gmail.com'
+DEFAULT_FROM_EMAIL = 'healthcalendar.emailer@gmail.com'
+EMAIL_HOST_PASSWORD = '<PASSWORD OR SECURITY CODE OF APP>'
+
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS += ['debug_toolbar']
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']

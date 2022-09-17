@@ -200,9 +200,19 @@ REST_FRAMEWORK = {
     ]
 }
 
+# celery
 CELERY_RESULT_BACKEND = 'rpc'
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
 CELERY_TASK_RESULT_EXPIRES = 60
+
+# emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'healthcalendar.emailer@gmail.com'
+DEFAULT_FROM_EMAIL = 'healthcalendar.emailer@gmail.com'
+EMAIL_HOST_PASSWORD = '<PASSWORD OR SECURITY CODE OF APP>'

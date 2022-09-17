@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, LikeMixin
 from core.Utils.Mixins.exceptions import SlugifyFieldNotSetException
+from .tasks import send_joke_to_email
 
 
 class Joke(CrmMixin, SlugifyMixin):
@@ -66,6 +67,10 @@ class Joke(CrmMixin, SlugifyMixin):
             'select is_liked from joke_like_status where user_id=%s AND joke_id=joke.id', (user.id,)
         ))
         return qs
+
+    def send_to_email(self, target):
+        is_send = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})
+        return is_send
 
 
 class JokeSeen(models.Model):

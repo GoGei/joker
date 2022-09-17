@@ -17,3 +17,4 @@ drf_yasg2==1.19.4
 
 celery==5.2.7
 redis==4.3.4
+premailer==3.10.0

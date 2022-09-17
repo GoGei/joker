@@ -19,6 +19,7 @@ django-debug-toolbar==3.2.4
 
 celery==5.2.7
 redis==4.3.4
+premailer==3.10.0
 
 # extra libraries
 # loguru==0.6.0

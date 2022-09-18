@@ -2,12 +2,12 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from telethon import TelegramClient
+from telethon import TelegramClient, sync, errors
 
 from celery_runner import app
 
 
-@app.task(ignore_result=True, name='send-joke-to-email')
+@app.task(name='send-joke-to-email')
 def send_joke_to_email(joke, recipient, *args, **kwargs):
     base_template = 'core_templates/joke_email.html'
     context = {'joke_text': joke.text}
@@ -23,19 +23,24 @@ def send_joke_to_email(joke, recipient, *args, **kwargs):
     return True
 
 
-@app.task(ignore_result=True, name='send-joke-to-telegram')
+@app.task(name='send-joke-to-telegram')
 def send_joke_to_telegram(joke, recipient):
     base_template = 'core_templates/joke_email.html'
     context = {'joke_text': joke.text}
     api_id = settings.TELEGRAM_API_KEY
     api_hash = settings.TELEGRAM_API_HASH
+    bot_token = settings.TELEGRAM_BOT_TOKEN
 
     html_message = render_to_string(base_template, context)
-    client = TelegramClient('Telethon', api_id, api_hash)
+    client = TelegramClient(settings.TELEGRAM_SESSION_STORAGE_NAME, api_id, api_hash)
 
     try:
-        client.start()
-        client.send_message(recipient, html_message, parse_mode='html')
+        client.start(bot_token=bot_token)
+        entity = client.get_entity(recipient)
+        sync.syncify(client.send_message(entity=entity, message=html_message, parse_mode='html'))
+    except (ValueError, errors.PeerIdInvalidError) as e:
+        print(e)
+        return False
     finally:
         client.disconnect()
 

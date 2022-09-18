@@ -3,6 +3,8 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.html import strip_tags
+
+import settings
 from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, LikeMixin
 from core.Utils.Mixins.exceptions import SlugifyFieldNotSetException
 from .tasks import send_joke_to_email, send_joke_to_telegram
@@ -69,11 +71,13 @@ class Joke(CrmMixin, SlugifyMixin):
         return qs
 
     def send_to_email(self, target):
-        is_send = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})
+        async_result = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})
+        is_send = async_result.get()
         return is_send
 
-    def send_to_telegram(self, target):
-        is_send = send_joke_to_telegram.apply_async(kwargs={'joke': self, 'recipient': target})
+    def send_to_telegram_username(self, target):
+        async_result = send_joke_to_telegram.apply_async(kwargs={'joke': self, 'recipient': target})
+        is_send = async_result.get()
         return is_send
 
 

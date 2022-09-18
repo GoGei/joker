@@ -12,3 +12,5 @@ media/
 config/local_settings.py
 dumps/
 graphs/
+
+*.session*

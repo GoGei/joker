@@ -32,3 +32,4 @@ GRAPH_MODELS['all_applications'] = [app for app in INSTALLED_APPS if app.startsw
 # https://my.telegram.org/apps
 TELEGRAM_API_KEY = '<your telegram api key>>'
 TELEGRAM_API_HASH = '<your telegram api hash>'
+TELEGRAM_BOT_TOKEN = '<your telegram bot token>'

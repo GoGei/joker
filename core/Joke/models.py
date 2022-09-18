@@ -3,14 +3,15 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 
-import settings
 from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, LikeMixin
 from core.Utils.Mixins.exceptions import SlugifyFieldNotSetException
 from .tasks import send_joke_to_email, send_joke_to_telegram
 
 
 class Joke(CrmMixin, SlugifyMixin):
+    BASE_TEMPLATE = 'core_templates/joke_template_message.html'
     SLUGIFY_FIELD = 'text'
     text = models.CharField(max_length=4096)
 
@@ -69,6 +70,20 @@ class Joke(CrmMixin, SlugifyMixin):
             'select is_liked from joke_like_status where user_id=%s AND joke_id=joke.id', (user.id,)
         ))
         return qs
+
+    @property
+    def prepared_html_message(self):
+        base_template = self.BASE_TEMPLATE
+        context = {'text': self.text}
+
+        html_message = render_to_string(base_template, context)
+        return html_message
+
+    @property
+    def prepared_plain_message(self):
+        html_message = self.prepared_html_message
+        plain_message = strip_tags(html_message)
+        return plain_message
 
     def send_to_email(self, target):
         async_result = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})

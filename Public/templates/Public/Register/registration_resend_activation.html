@@ -1,0 +1,12 @@
+{% extends 'Public/public_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block account-register %} active {% endblock %}
+
+
+{% block content %}
+    <h2>Account not active!</h2>
+    <p>Dear {{ user.username }}, your account is inactive! We send confirmation email one more time.</p>
+    <p>Please, confirm registration via the message. It will be expired in 1 day!</p>
+{% endblock %}

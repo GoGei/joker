@@ -1,0 +1,11 @@
+{% extends 'Public/public_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block account-register %} active {% endblock %}
+
+
+{% block content %}
+    <h2>{{ form.title }}</h2>
+    {% include 'base_form.html' with form=form %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'Public/public_base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Your verification is failed</h1>
+    <h2>{{ error_message }}</h2>
+    <a href="{% url 'home-register-resend' %}">Resend code</a>
+{% endblock %}

@@ -74,7 +74,7 @@ class Joke(CrmMixin, SlugifyMixin):
     @property
     def prepared_html_message(self):
         base_template = self.BASE_TEMPLATE
-        context = {'text': self.text}
+        context = {'joke_text': self.text}
 
         html_message = render_to_string(base_template, context)
         return html_message
@@ -87,13 +87,13 @@ class Joke(CrmMixin, SlugifyMixin):
 
     def send_to_email(self, target):
         async_result = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})
-        is_send = async_result.get()
-        return is_send
+        is_send, result = async_result.get()
+        return is_send, result
 
     def send_to_telegram_username(self, target):
         async_result = send_joke_to_telegram.apply_async(kwargs={'joke': self, 'recipient': target})
-        is_send = async_result.get()
-        return is_send
+        is_send, result = async_result.get()
+        return is_send, result
 
 
 class JokeSeen(models.Model):

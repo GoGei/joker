@@ -1,3 +1,5 @@
+import smtplib
+
 from django.conf import settings
 from django.core.mail import send_mail
 from telethon import TelegramClient, sync, errors
@@ -14,8 +16,16 @@ def send_joke_to_email(joke, recipient, *args, **kwargs):
     sender = settings.DEFAULT_FROM_EMAIL
     recipients = [recipient]
 
-    send_mail(subject, plain_message, sender, recipients, html_message=html_message)
-    return True
+    try:
+        send_mail(subject, plain_message, sender, recipients, html_message=html_message)
+    except smtplib.SMTPAuthenticationError as e:
+        print(e)
+        return False, 'Login not successful'
+    except Exception as e:
+        print(e)
+        return False, 'Something went wrong'
+
+    return True, None
 
 
 @app.task(name='send-joke-to-telegram')
@@ -31,10 +41,15 @@ def send_joke_to_telegram(joke, recipient):
         entity = client.get_entity(recipient)
         html_message = joke.prepared_html_message
         sync.syncify(client.send_message(entity=entity, message=html_message, parse_mode='html'))
-    except (ValueError, errors.PeerIdInvalidError) as e:
+    except ValueError as e:
+        return False, str(e)
+    except (errors.rpcerrorlist.ApiIdInvalidError, errors.rpcerrorlist.AccessTokenInvalidError) as e:
         print(e)
-        return False
+        return False, 'Login not successful'
+    except Exception as e:
+        print(e)
+        return False, 'Something went wrong'
     finally:
         client.disconnect()
 
-    return True
+    return True, None

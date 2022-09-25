@@ -37,12 +37,12 @@
             <li class="nav-item {% block top-jokes-menu-navbar %}{% endblock %}">
                 <a class="nav-link" href="{% url 'home-top-jokes' %}">Top jokes</a>
             </li>
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 <li class="nav-item {% block liked-jokes-menu-navbar %}{% endblock %}">
                     <a class="nav-link" href="{% url 'home-liked-jokes' %}">My favourite jokes</a>
                 </li>
             {% endif %}
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 <li class="nav-item {% block seen-jokes-menu-navbar %}{% endblock %}">
                     <a class="nav-link" href="{% url 'home-seen-jokes' %}">My seen jokes</a>
                 </li>
@@ -50,7 +50,7 @@
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
+                {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home-logout' %}">{{ user.username }} | Logout</a>
                     </li>

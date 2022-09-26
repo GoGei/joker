@@ -1,6 +1,7 @@
 from random import randint
 from django.db import models
 from django.db.models.expressions import RawSQL
+from django.core.cache import cache
 from drf_yasg2.utils import swagger_auto_schema
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
@@ -62,33 +63,42 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
     def get_random(self, request, *args, **kwargs):
         user = self.request.user
 
+        def get_random_joke_from_qs(qs):
+            if qs.exists():
+                return queryset[randint(0, qs.count() - 1)]
+            return None
+
         if user.is_authenticated:
             queryset = self.get_queryset()
             queryset = queryset.filter(is_seen=False)
 
-            if not queryset.exists():
-                user.jokeseen_set.all().delete()
-                print('All seen removed')
+            joke = get_random_joke_from_qs(queryset)
+            if joke:
+                JokeSeen.objects.create(joke=joke, user=user)
         else:
-            serializer = self.get_serializer(data=self.request.GET)
+            data = {'seen_jokes': cache.get('seen_jokes', [])}
+
+            serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             seen_jokes = serializer.validated_data.get('seen_jokes')
 
             queryset = self.get_queryset()
             if seen_jokes:
-                seen_jokes = list(map(int, seen_jokes.split(',')))
                 queryset = queryset.exclude(id__in=seen_jokes)
 
-        if not queryset.exists():
+            joke = get_random_joke_from_qs(queryset)
+            if joke:
+                seen_jokes.append(joke.pk)
+                cache.set('seen_jokes', seen_jokes)
+
+        if not joke:
+            # clear seen jokes
+            if user.is_authenticated:
+                user.jokeseen_set.all().delete()
+            else:
+                cache.set('seen_jokes', [])
             return Response({'text': 'There are no jokes left you have not seen',
                              'all_jokes_seen': True},
                             status=status.HTTP_200_OK)
 
-        joke = queryset[randint(0, queryset.count() - 1)]
-        if user.is_authenticated:
-            JokeSeen.objects.create(joke=joke, user=user)
-
-        serializer = JokeSerializer(joke)
-        data = serializer.data.copy()
-        data.update({'add_to_cache': not user.is_authenticated})
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(JokeSerializer(joke).data, status=status.HTTP_200_OK)

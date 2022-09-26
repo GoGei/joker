@@ -2,12 +2,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django_hosts import reverse
+from core.Utils.Access.user_check_functions import manager_check
 
 from .forms import LoginForm
 
 
 def login_view(request):
-    if request.user.is_authenticated:
+    user = request.user
+    if user.is_authenticated and manager_check(user):
         return redirect(reverse('admin-home'))
 
     initial = {'email': request.COOKIES.get('email', '')}

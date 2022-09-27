@@ -18,11 +18,9 @@ def send_joke_to_email(joke, recipient, *args, **kwargs):
 
     try:
         send_mail(subject, plain_message, sender, recipients, html_message=html_message)
-    except smtplib.SMTPAuthenticationError as e:
-        print(e)
+    except smtplib.SMTPAuthenticationError:
         return False, 'Login not successful'
-    except Exception as e:
-        print(e)
+    except Exception:
         return False, 'Something went wrong'
 
     return True, None
@@ -44,10 +42,8 @@ def send_joke_to_telegram(joke, recipient):
     except ValueError as e:
         return False, str(e)
     except (errors.rpcerrorlist.ApiIdInvalidError, errors.rpcerrorlist.AccessTokenInvalidError) as e:
-        print(e)
         return False, 'Login not successful'
-    except Exception as e:
-        print(e)
+    except Exception:
         return False, 'Something went wrong'
     finally:
         client.disconnect()

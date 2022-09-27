@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from core.Joke.models import Joke
+from core.Utils.validators import TelegramNicknameValidator
 
 
 class JokeSerializer(serializers.ModelSerializer):
@@ -28,3 +29,11 @@ class JokeSeenSerializer(serializers.Serializer):
             except Joke.DoesNotExist:
                 raise serializers.ValidationError({'seen_jokes': 'Joke with ID %s does not found!' % pk})
         return data
+
+
+class JokeSendToEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class JokeSendToTelegramSerializer(serializers.Serializer):
+    nickname = serializers.CharField(required=True, validators=[TelegramNicknameValidator])

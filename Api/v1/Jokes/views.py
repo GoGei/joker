@@ -111,7 +111,11 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
         is_send, result = joke.send_to_email(email)
-        return Response({'is_send': is_send, 'result': result})
+
+        if not is_send:
+            return Response(result, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True, permission_classes=(permissions.AllowAny,),
             url_path='send-to-telegram', url_name='send-to-telegram')
@@ -121,4 +125,8 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         serializer.is_valid(raise_exception=True)
         nickname = serializer.validated_data.get('nickname')
         is_send, result = joke.send_to_telegram_username(nickname)
-        return Response({'is_send': is_send, 'result': result})
+
+        if not is_send:
+            return Response(result, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)

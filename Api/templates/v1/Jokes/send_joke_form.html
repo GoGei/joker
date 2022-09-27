@@ -1,0 +1,12 @@
+{% load rest_framework %}
+
+<div class="container">
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        {% render_form serializer %}
+        <input type="submit" value="Send" class="btn btn-success">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+            Close
+        </button>
+    </form>
+</div>

@@ -78,6 +78,7 @@ TEMPLATES = [
             BASE_DIR + 'core/templates/',
             BASE_DIR + 'Public/templates/',
             BASE_DIR + 'Admin/templates/',
+            BASE_DIR + 'Api/templates/',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

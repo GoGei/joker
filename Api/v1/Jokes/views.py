@@ -7,8 +7,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from Api.base_views import MappedSerializerVMixin
-from .serializers import JokeSerializer, JokeSeenSerializer, JokeSendToEmailSerializer, JokeSendToTelegramSerializer
+from core.Joke import exceptions
 from core.Joke.models import Joke, JokeSeen
+from .serializers import JokeSerializer, JokeSeenSerializer, JokeSendToEmailSerializer, JokeSendToTelegramSerializer
 
 
 class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
@@ -114,9 +115,10 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         try:
             is_send, result = joke.send_to_email(email)
             if not is_send:
-                raise ValueError('Email is not send. Please, try later!')
-        except ValueError as e:
-            return Response({'non_field_errors': [str(e)]}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'non_field_errors': ['Email is not send. Please, try later!']},
+                                status=status.HTTP_400_BAD_REQUEST)
+        except exceptions.EmailConnectToMailException as e:
+            return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']})
 
         return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)
 
@@ -131,8 +133,16 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         try:
             is_send, result = joke.send_to_telegram_username(nickname)
             if not is_send:
-                raise ValueError('Email is not send. Please, try later!')
-        except ValueError as e:
-            return Response({'non_field_errors': [str(e)]}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'non_field_errors': ['Joke is not send. Please, try later!']},
+                                status=status.HTTP_400_BAD_REQUEST)
+        except exceptions.TelegramRecipientNotRegisteredInBotException as e:
+            return Response({'non_field_errors': ['Probably you dont have conversation with our bot']},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except exceptions.TelegramIncorrectRecipientException as e:
+            return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except exceptions.TelegramConnectToBotException as e:
+            return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)

@@ -2,8 +2,9 @@ import smtplib
 
 from django.conf import settings
 from django.core.mail import send_mail
-from telethon import TelegramClient, sync, errors
-
+from telethon import TelegramClient, sync
+from telethon.errors import rpcerrorlist as telegram_errors
+from . import exceptions
 from celery_runner import app
 
 
@@ -19,9 +20,7 @@ def send_joke_to_email(joke, recipient, *args, **kwargs):
     try:
         send_mail(subject, plain_message, sender, recipients, html_message=html_message)
     except smtplib.SMTPAuthenticationError as e:
-        raise ValueError('Please, try send message later')
-    except Exception as e:
-        raise ValueError('Something went wrong')
+        raise exceptions.EmailConnectToMailException()
 
     return True, None
 
@@ -40,13 +39,11 @@ def send_joke_to_telegram(joke, recipient):
         html_message = joke.prepared_html_message
         sync.syncify(client.send_message(entity=entity, message=html_message, parse_mode='html'))
     except ValueError as e:
-        raise ValueError(e)
-    except errors.rpcerrorlist.UsernameInvalidError as e:
-        raise ValueError('Please, provide correct nickname')
-    except (errors.rpcerrorlist.ApiIdInvalidError, errors.rpcerrorlist.AccessTokenInvalidError) as e:
-        raise ValueError('Please, try send message later')
-    except Exception as e:
-        raise ValueError('Something went wrong')
+        raise exceptions.TelegramRecipientNotRegisteredInBotException(e)
+    except telegram_errors.UsernameInvalidError as e:
+        raise exceptions.TelegramIncorrectRecipientException(e)
+    except (telegram_errors.ApiIdInvalidError, telegram_errors.AccessTokenInvalidError) as e:
+        raise exceptions.TelegramConnectToBotException()
     finally:
         client.disconnect()
 

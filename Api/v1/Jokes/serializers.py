@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from core.Joke.models import Joke
-from core.Utils.validators import TelegramNicknameValidator
 
 
 class JokeSerializer(serializers.ModelSerializer):
@@ -36,4 +35,4 @@ class JokeSendToEmailSerializer(serializers.Serializer):
 
 
 class JokeSendToTelegramSerializer(serializers.Serializer):
-    nickname = serializers.CharField(required=True, validators=[TelegramNicknameValidator])
+    nickname = serializers.CharField(required=True)

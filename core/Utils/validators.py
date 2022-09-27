@@ -5,8 +5,8 @@ PhoneValidator = RegexValidator(regex=r'^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([
                                 message=(
                                     "Phone number must be entered in the format: '+380(99)-999-9999'."))
 
-TelegramNicknameValidator = RegexValidator(regex=r'^.*\B@(?=\w{5,32}\b)\w+(?:_[a-zA-Z0-9]+)*.*$',
-                                           message=("Enter your telegram nickname: @yourUserName"))
+TelegramNicknameValidator = RegexValidator(regex=r'^\B@[a-zA-Z][\w\d]{5,30}[a-zA-Z\d]$',
+                                           message="Enter correct telegram nickname")
 
 
 class ContainsUpperCaseValidator(object):

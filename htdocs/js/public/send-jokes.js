@@ -35,6 +35,10 @@ $('a.email-send, a.telegram-send').click(function (e) {
                     }
                 },
                 error: function (response) {
+                    $form.find('.has-error').removeClass();
+                    $form.find('.error-message').remove();
+                    $form.find('.success-message').remove();
+
                     let errors = response.responseJSON;
                     $.each(errors, function (name, messages) {
                         let field = $form.find(`[name=${name}]`);

@@ -18,10 +18,10 @@ def send_joke_to_email(joke, recipient, *args, **kwargs):
 
     try:
         send_mail(subject, plain_message, sender, recipients, html_message=html_message)
-    except smtplib.SMTPAuthenticationError:
-        return False, 'Login not successful'
-    except Exception:
-        return False, 'Something went wrong'
+    except smtplib.SMTPAuthenticationError as e:
+        raise ValueError('Please, try send message later')
+    except Exception as e:
+        raise ValueError('Something went wrong')
 
     return True, None
 
@@ -40,11 +40,13 @@ def send_joke_to_telegram(joke, recipient):
         html_message = joke.prepared_html_message
         sync.syncify(client.send_message(entity=entity, message=html_message, parse_mode='html'))
     except ValueError as e:
-        return False, str(e)
+        raise ValueError(e)
+    except errors.rpcerrorlist.UsernameInvalidError as e:
+        raise ValueError('Please, provide correct nickname')
     except (errors.rpcerrorlist.ApiIdInvalidError, errors.rpcerrorlist.AccessTokenInvalidError) as e:
-        return False, 'Login not successful'
-    except Exception:
-        return False, 'Something went wrong'
+        raise ValueError('Please, try send message later')
+    except Exception as e:
+        raise ValueError('Something went wrong')
     finally:
         client.disconnect()
 

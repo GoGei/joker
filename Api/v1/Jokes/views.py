@@ -110,10 +110,13 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
-        is_send, result = joke.send_to_email(email)
 
-        if not is_send:
-            return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            is_send, result = joke.send_to_email(email)
+            if not is_send:
+                raise ValueError('Email is not send. Please, try later!')
+        except ValueError as e:
+            return Response({'non_field_errors': [str(e)]}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)
 
@@ -124,9 +127,12 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         nickname = serializer.validated_data.get('nickname')
-        is_send, result = joke.send_to_telegram_username(nickname)
 
-        if not is_send:
-            return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            is_send, result = joke.send_to_telegram_username(nickname)
+            if not is_send:
+                raise ValueError('Email is not send. Please, try later!')
+        except ValueError as e:
+            return Response({'non_field_errors': [str(e)]}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)

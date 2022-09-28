@@ -9,6 +9,8 @@
     <div>
         {% for joke in jokes %}
             {% include 'Public/joke_card.html' with joke=joke %}
+        {% empty %}
+            <h2>No seen jokes yet</h2>
         {% endfor %}
     </div>
 {% endblock %}

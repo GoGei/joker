@@ -48,18 +48,21 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
     def like(self, request, pk=None):
         joke = self.get_object()
         joke.like(request.user)
+        joke.make_seen(request.user)
         return Response({'joke %s is liked' % joke.label}, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True, permission_classes=(permissions.IsAuthenticated,))
     def dislike(self, request, pk=None):
         joke = self.get_object()
         joke.dislike(request.user)
+        joke.make_seen(request.user)
         return Response({'joke %s is disliked' % joke.label}, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True, permission_classes=(permissions.IsAuthenticated,))
     def deactivate(self, request, pk=None):
         joke = self.get_object()
         joke.deactivate(request.user)
+        joke.make_seen(request.user)
         return Response({'joke %s is deactivated' % joke.label}, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False, url_name='get-random', url_path='get-random')
@@ -77,7 +80,7 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
 
             joke = get_random_joke_from_qs(queryset)
             if joke:
-                JokeSeen.objects.create(joke=joke, user=user)
+                joke.make_seen(user)
         else:
             data = {'seen_jokes': cache.get('seen_jokes', [])}
 

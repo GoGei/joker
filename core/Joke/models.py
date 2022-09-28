@@ -61,6 +61,10 @@ class Joke(CrmMixin, SlugifyMixin):
         like_status.deactivate()
         return self
 
+    def make_seen(self, user):
+        JokeSeen.objects.create(joke=self, user=user)
+        return self
+
     @classmethod
     def annotate_qs_by_user(cls, qs, user=None):
         if not (user and user.is_authenticated):

@@ -99,6 +99,22 @@ class Joke(CrmMixin, SlugifyMixin):
         is_send, result = async_result.get()
         return is_send, result
 
+    @classmethod
+    def get_unseen_jokes(cls, user):
+        queryset = cls.objects.prefetch_related('jokeseen_set', 'jokelikestatus_set')
+        queryset = queryset.annotate(is_seen=models.Exists(
+            JokeSeen.objects.filter(
+                joke=models.OuterRef('pk'),
+                user=user
+            )))
+        queryset = queryset.filter(is_seen=False)
+        return queryset
+
+    @classmethod
+    def clear_seen_jokes(cls, user):
+        user.jokeseen_set.all().delete()
+        return True
+
 
 class JokeSeen(models.Model):
     joke = models.ForeignKey('Joke.Joke', on_delete=models.CASCADE)

@@ -239,3 +239,22 @@ CACHES = {
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+CELERY_BEAT_SCHEDULE = {
+    'send-everyday-joke-email': {
+        'task': 'core.Joke.tasks.send_daily_jokes_to_users',
+        'schedule': 30.0,
+        'args': ('email',),  # core.joke.enums.SendMethods
+        'options': {
+            'expires': 60 * 60 * 1,  # 1h
+        },
+    },
+    'send-everyday-joke-telegram': {
+        'task': 'core.Joke.tasks.send_daily_jokes_to_users',
+        'schedule': 60.0,
+        'args': ('telegram_bot',),  # core.joke.enums.SendMethods
+        'options': {
+            'expires': 5,  # 1h
+        },
+    },
+}

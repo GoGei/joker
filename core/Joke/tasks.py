@@ -4,8 +4,9 @@ from django.conf import settings
 from django.core.mail import send_mail
 from telethon import TelegramClient, sync
 from telethon.errors import rpcerrorlist as telegram_errors
-from . import exceptions
 from celery_runner import app
+from . import exceptions
+from . import enums
 
 
 @app.task(name='send-joke-to-email')
@@ -48,3 +49,44 @@ def send_joke_to_telegram(joke, recipient):
         client.disconnect()
 
     return True, None
+
+
+@app.task(name='send-daily-jokes')
+def send_daily_jokes_to_users(send_method: enums.SendMethods):
+    from random import randint
+    from core.Joke.models import Joke
+    from core.User.models import User
+
+    def get_random_joke_from_qs(qs):
+        if qs.exists():
+            return queryset[randint(0, qs.count() - 1)]
+        return None
+
+    def perform_send(func, *args, **kwargs):
+        try:
+            is_send, result = func(*args, **kwargs)
+            if is_send:
+                joke.make_seen(user)
+        except Exception as e:
+            print(e)
+
+    queryset = Joke.objects.prefetch_related('jokeseen_set', 'jokelikestatus_set')
+
+    users = User.objects.filter(is_active=True, is_staff=False, is_superuser=False)
+    for user in users:
+        jokes = Joke.get_unseen_jokes(user)
+
+        if not jokes.exists():
+            Joke.clear_seen_jokes(user)
+            jokes = Joke.get_unseen_jokes(user)
+
+        joke = get_random_joke_from_qs(jokes)
+        if joke:
+            if send_method == enums.SendMethods.EMAIL:
+                perform_send(joke.send_to_email, (user.email,))
+            elif send_method == enums.SendMethods.TELEGRAM_BOT:
+                perform_send(joke.send_to_telegram_username, (user.tg_nickname,))
+            else:
+                raise exceptions.InvalidSendMethod()
+
+    return True

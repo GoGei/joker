@@ -42,6 +42,11 @@ def celeryd():
 
 
 @task
+def celery_beat():
+    local('celery -A celery_runner beat')
+
+
+@task
 def dump_db(user='postgres'):
     db_name = dj_settings.DATABASES['default']['NAME']
 

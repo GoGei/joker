@@ -16,3 +16,8 @@ class TelegramRecipientNotRegisteredInBotException(Exception):
 class EmailConnectToMailException(Exception):
     """Use when django can not connect to email"""
     pass
+
+
+class InvalidSendMethod(Exception):
+    """Use when method of joke send is unknown"""
+    pass

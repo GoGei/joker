@@ -2,6 +2,7 @@ import hashids
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from core.Joke.models import Joke, JokeSeen
 from .tasks import send_activation_link_to_email
 from .utils import RegistrationCodeHandler
 
@@ -37,8 +38,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    # REGISTRATION_CODE_EXPIRE_TIME_SECONDS = 60 * 60 * 24 # 1 day
-    REGISTRATION_CODE_EXPIRE_TIME_SECONDS = 60
+    REGISTRATION_CODE_EXPIRE_TIME_SECONDS = 60 * 60 * 24 # 1 day
 
     username = models.CharField(max_length=255, unique=True, db_index=True, null=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True, null=True)
@@ -62,6 +62,10 @@ class User(AbstractBaseUser):
         return self.label
 
     @property
+    def tg_nickname(self):
+        return f'@{self.username}'
+
+    @property
     def label(self):
         return self.email or self.id
 
@@ -82,7 +86,3 @@ class User(AbstractBaseUser):
         print(link)
         send_activation_link_to_email.apply_async(kwargs={'user': self, 'link': link})
         return True
-
-    @classmethod
-    def get_user_by_registration_code(cls, code):
-        return

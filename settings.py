@@ -242,19 +242,45 @@ SESSION_CACHE_ALIAS = "default"
 
 CELERY_BEAT_SCHEDULE = {
     'send-everyday-joke-email': {
-        'task': 'core.Joke.tasks.send_daily_jokes_to_users',
-        'schedule': 30.0,
+        'task': 'send-daily-jokes',
+        'schedule': 60 * 60 * 24,  # 1 day
         'args': ('email',),  # core.joke.enums.SendMethods
         'options': {
             'expires': 60 * 60 * 1,  # 1h
         },
     },
     'send-everyday-joke-telegram': {
-        'task': 'core.Joke.tasks.send_daily_jokes_to_users',
-        'schedule': 60.0,
+        'task': 'send-daily-jokes',
+        'schedule': 60 * 60 * 24,  # 1 day
         'args': ('telegram_bot',),  # core.joke.enums.SendMethods
         'options': {
-            'expires': 5,  # 1h
+            'expires': 60 * 60 * 1,  # 1h
         },
     },
 }
+
+
+# from celery_runner import app
+# from celery.schedules import crontab
+#
+# CELERY_TIMEZONE = 'UTC'
+#
+#
+# app.conf.beat_schedule = {
+#     'send-everyday-joke-email': {
+#         'task': 'send-daily-jokes',
+#         'schedule': crontab(hour=21, minute=35),
+#         'args': ('email',),  # core.joke.enums.SendMethods
+#         'options': {
+#             'expires': 60 * 60 * 1,  # 1h
+#         },
+#     },
+#     'send-everyday-joke-telegram': {
+#         'task': 'send-daily-jokes',
+#         'schedule': crontab(hour=21, minute=35),
+#         'args': ('telegram_bot',),  # core.joke.enums.SendMethods
+#         'options': {
+#             'expires': 60 * 60 * 1,  # 1h
+#         },
+#     },
+# }

@@ -62,9 +62,9 @@ def send_daily_jokes_to_users(send_method: enums.SendMethods):
             return queryset[randint(0, qs.count() - 1)]
         return None
 
-    def perform_send(func, *args, **kwargs):
+    def perform_send(joke, func, target):
         try:
-            is_send, result = func(*args, **kwargs)
+            is_send, result = getattr(joke, func)(target)
             if is_send:
                 joke.make_seen(user)
         except Exception as e:
@@ -82,11 +82,11 @@ def send_daily_jokes_to_users(send_method: enums.SendMethods):
 
         joke = get_random_joke_from_qs(jokes)
         if joke:
-            if send_method == enums.SendMethods.EMAIL:
-                perform_send(joke.send_to_email, (user.email,))
-            elif send_method == enums.SendMethods.TELEGRAM_BOT:
-                perform_send(joke.send_to_telegram_username, (user.tg_nickname,))
+            if send_method == enums.SendMethods.EMAIL.value:
+                perform_send(joke, 'send_to_email', user.email)
+            elif send_method == enums.SendMethods.TELEGRAM_BOT.value:
+                perform_send(joke, 'send_to_telegram_username', user.tg_nickname)
             else:
-                raise exceptions.InvalidSendMethod()
+                raise exceptions.InvalidSendMethod(f'Method to send is invalid {send_method}')
 
     return True

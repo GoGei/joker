@@ -38,10 +38,10 @@ def send_joke_to_telegram(joke, recipient):
         entity = client.get_entity(recipient)
         html_message = joke.prepared_html_message
         sync.syncify(client.send_message(entity=entity, message=html_message, parse_mode='html'))
-    except ValueError as e:
-        raise exceptions.TelegramRecipientNotRegisteredInBotException(e)
+    except (ValueError, telegram_errors.PeerIdInvalidError) as e:
+        raise exceptions.TelegramRecipientNotRegisteredInBotException()
     except telegram_errors.UsernameInvalidError as e:
-        raise exceptions.TelegramIncorrectRecipientException(e)
+        raise exceptions.TelegramIncorrectRecipientException()
     except (telegram_errors.ApiIdInvalidError, telegram_errors.AccessTokenInvalidError) as e:
         raise exceptions.TelegramConnectToBotException()
     finally:

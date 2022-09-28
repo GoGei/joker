@@ -1,4 +1,6 @@
 from random import randint
+
+from django.conf import settings
 from django.db import models
 from django.db.models.expressions import RawSQL
 from django.core.cache import cache
@@ -136,10 +138,11 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
                 return Response({'non_field_errors': ['Joke is not send. Please, try later!']},
                                 status=status.HTTP_400_BAD_REQUEST)
         except exceptions.TelegramRecipientNotRegisteredInBotException as e:
-            return Response({'non_field_errors': ['Probably you dont have conversation with our bot']},
+            botname = settings.TELEGRAM_BOT_NICKNAME
+            return Response({'non_field_errors': [f'Please, start conversation with bot {botname} first.']},
                             status=status.HTTP_400_BAD_REQUEST)
         except exceptions.TelegramIncorrectRecipientException as e:
-            return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']},
+            return Response({'non_field_errors': ['Please, enter correct nickname.']},
                             status=status.HTTP_400_BAD_REQUEST)
         except exceptions.TelegramConnectToBotException as e:
             return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']},

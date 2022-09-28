@@ -1,18 +1,18 @@
-class TelegramIncorrectRecipientException(BaseException):
+class TelegramIncorrectRecipientException(Exception):
     """Use when telegram can not identify entry by passed data"""
     pass
 
 
-class TelegramConnectToBotException(BaseException):
+class TelegramConnectToBotException(Exception):
     """Use when telegram API can not connect to bot"""
     pass
 
 
-class TelegramRecipientNotRegisteredInBotException(BaseException):
+class TelegramRecipientNotRegisteredInBotException(Exception):
     """Use when user does not have conversation with bot"""
     pass
 
 
-class EmailConnectToMailException(BaseException):
+class EmailConnectToMailException(Exception):
     """Use when django can not connect to email"""
     pass

@@ -1,4 +1,6 @@
 from django import forms
+from django.db.models import Q
+import django_filters
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 from core.Utils.filtersets import BaseFilterForm
@@ -8,9 +10,21 @@ from core.Joke.models import Joke
 class JokeFilterForm(BaseFilterForm):
     SEARCH_FIELDS = ['text']
 
+    with_slug = django_filters.ChoiceFilter(label='With slug', empty_label='Not selected',
+                                            method='is_with_slug_filter',
+                                            choices=[('true', 'With slug'), ('false', 'Without slug')])
+
+    def is_with_slug_filter(self, queryset, name, value):
+        with_slug = Q(slug__isnull=False) & ~Q(slug__exact='')
+        if value == 'true':
+            queryset = queryset.filter(with_slug)
+        elif value == 'false':
+            queryset = queryset.filter(~with_slug)
+        return queryset
+
     class Meta:
         model = Joke
-        fields = BaseFilterForm.BASE_FILTER_FIELDS
+        fields = BaseFilterForm.BASE_FILTER_FIELDS + ['with_slug']
 
 
 class JokeForm(forms.ModelForm):

@@ -3,9 +3,9 @@ $(document).ready(function () {
 
     $('.button-like-js').click(function (event) {
         event.preventDefault();
-        let $current = $(this)
+        let $current = $(this);
         let buttonClass = 'button-like';
-        let siblingClass = 'button-dislike-js'
+        let siblingClass = 'button-dislike-js';
 
         if (!$current.hasClass(buttonClass)) {
             $.ajax({

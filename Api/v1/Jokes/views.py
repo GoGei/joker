@@ -75,7 +75,7 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
             return None
 
         if user.is_authenticated:
-            queryset = user.get_unseen_jokes()
+            queryset = Joke.get_unseen_jokes(user)
             joke = get_random_joke_from_qs(queryset)
             if joke:
                 joke.make_seen(user)

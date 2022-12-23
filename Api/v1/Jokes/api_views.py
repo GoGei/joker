@@ -8,13 +8,16 @@ from .serializers import JokeSendToEmailSerializer, JokeSendToTelegramSerializer
 
 class BaseJokeSendAPIView(APIView):
     permission_classes = (AllowAny,)
-    serializer = None
+    serializer_class = None
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'v1/Jokes/send_joke_form.html'
     style = {'template_pack': 'rest_framework/vertical/'}
 
     def get_user_data(self):
-        data = {}
+        data = {
+            'email': 'example@gmail.com',
+            'nickname': '@your_nickname'
+        }
         user = self.request.user
         if user.is_authenticated:
             data.update({'email': user.email,
@@ -22,16 +25,14 @@ class BaseJokeSendAPIView(APIView):
         return data
 
     def get(self, request):
-        data = {}
-        if request.user.is_authenticated:
-            data.update(self.get_user_data())
-        serializer = self.serializer(data)
+        data = self.get_user_data()
+        serializer = self.serializer_class(data)
         return Response({'serializer': serializer, 'style': self.style})
 
 
 class JokeSendToEmailAPIView(BaseJokeSendAPIView):
-    serializer = JokeSendToEmailSerializer
+    serializer_class = JokeSendToEmailSerializer
 
 
 class JokeSendToTelegramAPIView(BaseJokeSendAPIView):
-    serializer = JokeSendToTelegramSerializer
+    serializer_class = JokeSendToTelegramSerializer

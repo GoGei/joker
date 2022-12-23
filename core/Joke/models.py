@@ -27,12 +27,12 @@ class Joke(CrmMixin, SlugifyMixin):
 
     @classmethod
     def slugify_without_html(cls, value):
-        return slugify(strip_tags(value))
+        return slugify(strip_tags(value), allow_unicode=True)
 
     @classmethod
     def is_allowed_to_assign_slug(cls, value, instance=None):
         slug = cls.slugify_without_html(value)
-        qs = cls.objects.filter(slug=slug)
+        qs = cls.objects.exclude(slug__isnull=True, slug__exact='').filter(slug=slug)
         if instance:
             qs = qs.exclude(pk=instance.pk)
         return not qs.exists()

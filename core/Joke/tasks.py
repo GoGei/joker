@@ -20,7 +20,7 @@ def send_joke_to_email(joke, recipient, *args, **kwargs):
 
     try:
         send_mail(subject, plain_message, sender, recipients, html_message=html_message)
-    except smtplib.SMTPAuthenticationError as e:
+    except smtplib.SMTPAuthenticationError:
         raise exceptions.EmailConnectToMailException()
 
     return True, None
@@ -39,11 +39,11 @@ def send_joke_to_telegram(joke, recipient):
         entity = client.get_entity(recipient)
         html_message = joke.prepared_html_message
         sync.syncify(client.send_message(entity=entity, message=html_message, parse_mode='html'))
-    except (ValueError, telegram_errors.PeerIdInvalidError) as e:
+    except (ValueError, telegram_errors.PeerIdInvalidError):
         raise exceptions.TelegramRecipientNotRegisteredInBotException()
-    except telegram_errors.UsernameInvalidError as e:
+    except telegram_errors.UsernameInvalidError:
         raise exceptions.TelegramIncorrectRecipientException()
-    except (telegram_errors.ApiIdInvalidError, telegram_errors.AccessTokenInvalidError) as e:
+    except (telegram_errors.ApiIdInvalidError, telegram_errors.AccessTokenInvalidError):
         raise exceptions.TelegramConnectToBotException()
     finally:
         client.disconnect()

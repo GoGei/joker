@@ -1,7 +1,8 @@
+from slugify import slugify
+
 from django.db import models
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
-from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 
@@ -27,7 +28,7 @@ class Joke(CrmMixin, SlugifyMixin):
 
     @classmethod
     def slugify_without_html(cls, value):
-        return slugify(strip_tags(value), allow_unicode=True)
+        return slugify(strip_tags(value))
 
     @classmethod
     def is_allowed_to_assign_slug(cls, value, instance=None):
@@ -114,6 +115,13 @@ class Joke(CrmMixin, SlugifyMixin):
     def clear_seen_jokes(cls, user):
         user.jokeseen_set.all().delete()
         return True
+
+    def to_json(self):
+        return {
+            'text': self.text,
+            'slug': self.slug,
+            'is_active': self.is_active(),
+        }
 
 
 class JokeSeen(models.Model):

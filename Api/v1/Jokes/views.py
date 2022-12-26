@@ -120,7 +120,7 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
             if not is_send:
                 return Response({'non_field_errors': ['Email is not send. Please, try later!']},
                                 status=status.HTTP_400_BAD_REQUEST)
-        except exceptions.EmailConnectToMailException as e:
+        except exceptions.EmailConnectToMailException:
             return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']})
 
         return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)
@@ -138,14 +138,14 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
             if not is_send:
                 return Response({'non_field_errors': ['Joke is not send. Please, try later!']},
                                 status=status.HTTP_400_BAD_REQUEST)
-        except exceptions.TelegramRecipientNotRegisteredInBotException as e:
+        except exceptions.TelegramRecipientNotRegisteredInBotException:
             botname = settings.TELEGRAM_BOT_NICKNAME
             return Response({'non_field_errors': [f'Please, start conversation with bot {botname} first.']},
                             status=status.HTTP_400_BAD_REQUEST)
-        except exceptions.TelegramIncorrectRecipientException as e:
+        except exceptions.TelegramIncorrectRecipientException:
             return Response({'non_field_errors': ['Please, enter correct nickname.']},
                             status=status.HTTP_400_BAD_REQUEST)
-        except exceptions.TelegramConnectToBotException as e:
+        except exceptions.TelegramConnectToBotException:
             return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']},
                             status=status.HTTP_400_BAD_REQUEST)
 

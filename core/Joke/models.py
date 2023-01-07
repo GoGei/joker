@@ -1,9 +1,11 @@
+import celery
 from slugify import slugify
 
 from django.db import models
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.utils.html import strip_tags
+from django.conf import settings
 from django.template.loader import render_to_string
 
 from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, LikeMixin
@@ -93,12 +95,18 @@ class Joke(CrmMixin, SlugifyMixin):
 
     def send_to_email(self, target):
         async_result = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})
-        is_send, result = async_result.get()
+        try:
+            is_send, result = async_result.get(timeout=settings.CELERY_TASK_TIMEOUT)
+        except celery.exceptions.TimeoutError as e:
+            is_send, result = False, None
         return is_send, result
 
     def send_to_telegram_username(self, target):
         async_result = send_joke_to_telegram.apply_async(kwargs={'joke': self, 'recipient': target})
-        is_send, result = async_result.get()
+        try:
+            is_send, result = async_result.get(timeout=settings.CELERY_TASK_TIMEOUT)
+        except celery.exceptions.TimeoutError as e:
+            is_send, result = False, None
         return is_send, result
 
     @classmethod

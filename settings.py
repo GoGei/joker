@@ -208,6 +208,7 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
 CELERY_TASK_RESULT_EXPIRES = 60
+CELERY_TASK_TIMEOUT = 10
 
 # emails
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

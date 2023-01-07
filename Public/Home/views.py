@@ -42,6 +42,7 @@ def home_liked_views(request):
     liked = JokeLikeStatus.objects.select_related('joke', 'user').filter(user=user, is_liked=True).all()
     jokes = Joke.objects.filter(id__in=liked.values_list('joke', flat=True))
     jokes = Joke.annotate_qs_by_user(jokes, request.user)
+    jokes = jokes.order_by('-liked_order')
     return render(request, 'Public/Home/public_liked_jokes.html', {'jokes': jokes})
 
 
@@ -51,6 +52,7 @@ def home_seen_views(request):
         'seen_stamp').all()
     jokes = Joke.objects.filter(id__in=liked.values_list('joke', flat=True))
     jokes = Joke.annotate_qs_by_user(jokes, request.user)
+    jokes = jokes.order_by('-liked_order')
     return render(request, 'Public/Home/public_seen_jokes.html', {'jokes': jokes})
 
 

@@ -74,9 +74,13 @@ class Joke(CrmMixin, SlugifyMixin):
             qs = qs.annotate(is_liked=None)
             return qs
 
-        qs = qs.annotate(is_liked=RawSQL(
-            'select is_liked from joke_like_status where user_id=%s AND joke_id=joke.id', (user.id,)
-        ))
+        qs = qs.annotate(
+            is_liked=RawSQL(
+                'select is_liked from joke_like_status where user_id=%s AND joke_id=joke.id', (user.id,)),
+            liked_order=RawSQL(
+                'select id from joke_like_status where user_id=%s AND joke_id=joke.id', (user.id,))
+        )
+
         return qs
 
     @property

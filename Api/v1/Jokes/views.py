@@ -96,11 +96,12 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
                 cache.set('seen_jokes', seen_jokes)
 
         if not joke:
-            # clear seen jokes
-            if user.is_authenticated:
-                Joke.clear_seen_jokes(user)
-            else:
-                cache.set('seen_jokes', [])
+            if settings.CLEAR_SEEN_JOKES:
+                if user.is_authenticated:
+                    Joke.clear_seen_jokes(user)
+                else:
+                    cache.set('seen_jokes', [])
+
             return Response({'text': 'There are no jokes left you have not seen',
                              'all_jokes_seen': True},
                             status=status.HTTP_200_OK)

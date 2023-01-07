@@ -1,5 +1,6 @@
 import json
 from core.Joke.models import Joke
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 
@@ -13,6 +14,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         filename = options.get('filename')
+        extension = 'json'
+        file_extension = filename.split('.')[-1].lower()
+        if file_extension != extension:
+            filename += f'.{extension}'
         filepath = f'core/Joke/fixtures/{filename}'
         qs = Joke.objects.all()
         data = []
@@ -24,4 +29,5 @@ class Command(BaseCommand):
         with open(filepath, 'w+') as json_file:
             json.dump(data, json_file, ensure_ascii=False)
 
-        self.stdout.write(f'Jokes exported {len(data)}', style_func=self.style.SUCCESS)
+        full_path = f'{settings.BASE_DIR}{filepath}'
+        self.stdout.write(f'Jokes exported {len(data)} to {full_path}', style_func=self.style.SUCCESS)

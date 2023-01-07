@@ -16,6 +16,7 @@ from .tasks import send_joke_to_email, send_joke_to_telegram
 class Joke(CrmMixin, SlugifyMixin):
     BASE_TEMPLATE = 'core_templates/joke_template_message.html'
     SLUGIFY_FIELD = 'text'
+    MAX_LENGTH = 4096
     text = models.CharField(max_length=4096)
 
     class Meta:

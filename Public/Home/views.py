@@ -12,6 +12,16 @@ def home_view(request):
 def home_all_jokes_view(request):
     jokes = Joke.objects.active().ordered()
     jokes = Joke.annotate_qs_by_user(jokes, request.user)
+    jokes = jokes.annotate(
+        position=models.Case(
+            models.When(is_liked=None, then=1),
+            models.When(is_liked=True, then=2),
+            models.When(is_liked=False, then=3),
+            default=models.Value(0),
+            output_field=models.IntegerField()
+        )
+    )
+    jokes = jokes.order_by('position')
     return render(request, 'Public/Home/public_all_jokes.html', {'jokes': jokes})
 
 
@@ -42,3 +52,9 @@ def home_seen_views(request):
     jokes = Joke.objects.filter(id__in=liked.values_list('joke', flat=True))
     jokes = Joke.annotate_qs_by_user(jokes, request.user)
     return render(request, 'Public/Home/public_seen_jokes.html', {'jokes': jokes})
+
+
+@login_required
+def home_not_seen_jokes_views(request):
+    jokes = Joke.get_unseen_jokes(request.user)
+    return render(request, 'Public/Home/public_not_seen_jokes.html', {'jokes': jokes})

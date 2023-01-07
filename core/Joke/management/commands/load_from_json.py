@@ -95,7 +95,7 @@ class Command(BaseCommand):
 
             self.stdout.write('Passed (already exists)')
             for joke_text in passed_jokes:
-                self.stdout.write('\t{joke_text}', style_func=self.style.WARNING)
+                self.stdout.write(f'\t{joke_text}', style_func=self.style.WARNING)
 
             self.stdout.write('Slug went error')
             for joke in slug_error_jokes:

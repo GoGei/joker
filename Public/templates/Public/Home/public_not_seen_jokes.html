@@ -1,0 +1,16 @@
+{% extends 'Public/public_base.html' %}
+
+{% block not-seen-jokes-menu-navbar %} active {% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <h1>Jokes you not received in "random jokes"</h1>
+    </div>
+    <div>
+        {% for joke in jokes %}
+            {% include 'Public/joke_card.html' with joke=joke %}
+        {% empty %}
+            <h2>You have seen all jokes</h2>
+        {% endfor %}
+    </div>
+{% endblock %}

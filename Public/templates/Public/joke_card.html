@@ -10,36 +10,7 @@
                     {% endif %}
                 </div>
                 <div class="d-flex justify-content-end align-self-center col">
-                    <a href="#" class="btn button-reaction {% if joke.is_liked == True %}button-like{% endif %}
-                    button-like-js"
-                       data-ajax-activate-url="{% host_url 'api-v1:jokes-like' joke.id host 'api' %}"
-                       data-ajax-disable-url="{% host_url 'api-v1:jokes-deactivate' joke.id host 'api' %}">
-                        <i class="fa-solid fa-thumbs-up"></i>
-                    </a>
-                    <a href="#" class="btn button-reaction {% if joke.is_liked == False %}button-dislike{% endif %}
-                    button-dislike-js"
-                       data-ajax-activate-url="{% host_url 'api-v1:jokes-dislike' joke.id host 'api' %}"
-                       data-ajax-disable-url="{% host_url 'api-v1:jokes-deactivate' joke.id host 'api' %}">
-                        <i class="fa-solid fa-thumbs-down"></i>
-                    </a>
-
-                    <a href="#" class="btn telegram-send telegram-css"
-                       data-ajax-form-render-url="{% host_url 'api-v1:send-joke-to-telegram-form' host 'api' %}"
-                       data-ajax-action-url="{% host_url 'api-v1:jokes-send-to-telegram' joke.id host 'api' %}">
-                        <i class="fa-brands fa-telegram"></i>
-                    </a>
-                    <a href="#" class="btn email-send"
-                       data-ajax-form-render-url="{% host_url 'api-v1:send-joke-to-email-form' host 'api' %}"
-                       data-ajax-action-url="{% host_url 'api-v1:jokes-send-to-email' joke.id host 'api' %}">
-                        <i class="fa-solid fa-envelope"></i>
-                    </a>
-
-                    {#                    <a href="#" class="btn viber-css disabled">#}
-                    {#                        <i class="fa-brands fa-viber"></i>#}
-                    {#                    </a>#}
-                    {#                    <a href="#" class="btn whatsapp-css disabled">#}
-                    {#                        <i class="fa-brands fa-whatsapp"></i>#}
-                    {#                    </a>#}
+                   {% include 'Public/send_jokes_buttons.html' %}
                 </div>
             </div>
         </div>

@@ -6,6 +6,9 @@
     <div class="d-flex justify-content-center">
         <h1>Top jokes</h1>
     </div>
+    <div class="d-flex justify-content-center">
+        {% include 'Public/searcher.html' %}
+    </div>
     <div>
         {% for joke in jokes %}
             {% include 'Public/joke_card.html' with joke=joke %}

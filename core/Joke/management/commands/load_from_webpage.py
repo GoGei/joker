@@ -53,6 +53,6 @@ class Command(BaseCommand):
 
         if pages:
             for page in range(1, pages + 1):
-                self.handle_parsing( f'{url}?page={page}', *args, **kwargs)
+                self.handle_parsing(f'{url}?page={page}', *args, **kwargs)
         else:
             self.handle_parsing(url, *args, **kwargs)

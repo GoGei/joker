@@ -102,7 +102,7 @@ class Joke(CrmMixin, SlugifyMixin):
         async_result = send_joke_to_email.apply_async(kwargs={'joke': self, 'recipient': target})
         try:
             is_send, result = async_result.get(timeout=settings.CELERY_TASK_TIMEOUT)
-        except celery.exceptions.TimeoutError as e:
+        except celery.exceptions.TimeoutError:
             is_send, result = False, None
         return is_send, result
 
@@ -110,7 +110,7 @@ class Joke(CrmMixin, SlugifyMixin):
         async_result = send_joke_to_telegram.apply_async(kwargs={'joke': self, 'recipient': target})
         try:
             is_send, result = async_result.get(timeout=settings.CELERY_TASK_TIMEOUT)
-        except celery.exceptions.TimeoutError as e:
+        except celery.exceptions.TimeoutError:
             is_send, result = False, None
         return is_send, result
 

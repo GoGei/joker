@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^(?P<joke_slug>[\w\W\-]+)/restore/$', views.jokes_restore, name='jokes-restore'),
     url(r'^(?P<joke_slug>[\w\W\-]+)/delete/$', views.jokes_delete, name='jokes-delete'),
     url(r'^(?P<joke_slug>[\w\W\-]+)/view/$', views.jokes_view, name='jokes-view'),
+
+    url(r'^export/$', views.jokes_export, name='jokes-export'),
 ]

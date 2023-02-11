@@ -1,6 +1,7 @@
+from typing import List, Dict
 from slugify import slugify
 
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django.utils.text import slugify
 from django.conf import settings
@@ -104,3 +105,27 @@ class LikeMixin(models.Model):
     def deactivate(self):
         self.is_liked = None
         self.save()
+
+
+class ExportableMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def get_data_to_export(cls) -> List[Dict]:
+        raise NotImplementedError
+
+    @classmethod
+    def clear_previous(cls):
+        raise NotImplementedError
+
+    @classmethod
+    def import_data(cls, data):
+        raise NotImplementedError
+
+    @classmethod
+    @transaction.atomic
+    def import_from_data(cls, data):
+        cls.clear_previous()
+        cls.import_data(data)
+        return True

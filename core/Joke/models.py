@@ -1,19 +1,21 @@
+from typing import List, Dict
 import celery
 from slugify import slugify
 
 from django.db import models
+from django.db.models import Count, Q
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.conf import settings
 from django.template.loader import render_to_string
 
-from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, LikeMixin
+from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, LikeMixin, ExportableMixin
 from core.Utils.Mixins.exceptions import SlugifyFieldNotSetException
 from .tasks import send_joke_to_email, send_joke_to_telegram
 
 
-class Joke(CrmMixin, SlugifyMixin):
+class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
     BASE_TEMPLATE = 'core_templates/joke_template_message.html'
     SLUGIFY_FIELD = 'text'
     MAX_LENGTH = 4096
@@ -136,6 +138,18 @@ class Joke(CrmMixin, SlugifyMixin):
             'slug': self.slug,
             'is_active': self.is_active(),
         }
+
+    @classmethod
+    def get_data_to_export(cls) -> List[Dict]:
+        qs = JokeLikeStatus.objects.select_related('joke').filter(is_liked=True)
+        liked = set(qs.values_list('joke_id', flat=True))
+        qs = cls.objects.filter(id__in=liked).all()
+        data = [
+            {
+                'text': item.text,
+            } for item in qs
+        ]
+        return data
 
 
 class JokeSeen(models.Model):

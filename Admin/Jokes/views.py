@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect, reverse, get_object_or_404
+from rest_framework.renderers import JSONRenderer
 
 from core.Utils.Access.decorators import manager_required, superuser_required
 from core.Joke.models import Joke
@@ -128,3 +130,15 @@ def jokes_delete(request, joke_slug):
     messages.success(request, f'Joke {joke.pk} deleted')
     joke.delete()
     return redirect(reverse('jokes-list'), host='admin')
+
+
+@manager_required
+def jokes_export(request):
+    data = Joke.get_data_to_export()
+    content = JSONRenderer().render(data)
+
+    response = HttpResponse(content, content_type='application/json')
+    filename = 'liked_jokes.json'
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response['Cache-Control'] = 'no-cache'
+    return response

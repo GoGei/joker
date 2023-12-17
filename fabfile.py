@@ -1,93 +1,81 @@
+from __future__ import unicode_literals, print_function
+
 import os
 import random
 from datetime import datetime
 
-from fabric.api import local, lcd, cd
-from fabric.contrib import django
-from fabric.decorators import task
+from fabric import task
+from django.conf import settings as dj_settings
+from invocations.console import confirm
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__)) + '/'
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-django.project('joker')
-django.settings_module('config.local_settings')
-from config import local_settings as dj_settings
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.local_settings')
+VIRTUAL_ENV = os.environ.get('VIRTUAL_ENV') or os.path.join(PROJECT_ROOT, 'env')
+VIRTUAL_ENV_ACTIVATE = '. %s' % os.path.join(VIRTUAL_ENV, 'bin/activate')
 
 
-def _launch_django(project_path):
+@task
+def runserver(c):
     port = dj_settings.HOST_PORT
     if not port:
-        summ = sum([ord(char) for char in project_path.split('/')[-2]])
+        summ = sum([ord(char) for char in PROJECT_ROOT.split('/')[-1]])
         random.seed(summ)
         port = random.randrange(1024, 5000)
 
     server_address = '127.0.0.1'
     if os.path.exists('/etc/hosts'):
         with open('/etc/hosts') as f:
-            if f.read().find(dj_settings.SITE_URL) != -1:
-                server_address = dj_settings.SITE_URL
+            host_name = dj_settings.SITE_URL
+            if f.read().find(host_name) != -1:
+                server_address = host_name
 
-    with lcd(project_path):
-        insecure = not dj_settings.DEBUG and dj_settings.INSECURE
-        local(f'./manage.py runserver {server_address}:{port} {"--insecure" if insecure else ""}', capture=False)
-
-
-@task
-def runserver():
-    _launch_django(PROJECT_ROOT)
+    with c.prefix(VIRTUAL_ENV_ACTIVATE):
+        with c.cd(PROJECT_ROOT):
+            c.run('./manage.py runserver %s:%s' % (server_address, str(port)), pty=True)
 
 
 @task
-def celeryd():
-    local('celery -A celery_runner worker -l DEBUG')
+def celeryd(c):
+    with c.prefix(VIRTUAL_ENV_ACTIVATE):
+        with c.cd(PROJECT_ROOT):
+            c.run('celery -A celery_runner worker -l DEBUG -c 8 -Q celery', pty=True)
 
 
 @task
-def celery_beat():
-    local('celery -A celery_runner beat')
+def celerybeat(c):
+    with c.prefix(VIRTUAL_ENV_ACTIVATE):
+        with c.cd(PROJECT_ROOT):
+            c.run('celery -A celery_runner beat', pty=True)
 
 
 @task
-def dump_db(user='postgres'):
-    db_name = dj_settings.DATABASES['default']['NAME']
+def deploy_local(c, branch=None):
+    with c.prefix(VIRTUAL_ENV_ACTIVATE):
+        if not branch:
+            branch_name = 'main'
+        else:
+            branch_name = branch
 
-    date = datetime.now().strftime("%Y-%m-%d_%H%M")
-    dump_name = f'dumps/{db_name}_{date}.sql'
+        if not confirm(
+                "Are you sure? It will make changes on the remote system and deploy branch: %s" % branch_name):
+            c.abort("Ok, aborting launch...")
 
-    with cd(PROJECT_ROOT):
-        local('mkdir -p dumps')
-        local(f'sudo -u {user} pg_dump {db_name} > {dump_name} | bzip2 -9 > {dump_name}.bz2')
-
-
-@task
-def restore_db():
-    db_user = dj_settings.DATABASES['default']['USER']
-    db_name = dj_settings.DATABASES['default']['NAME']
-
-    with cd(PROJECT_ROOT):
-        with lcd('dumps'):
-            last_dump = 'dumps/' + local('ls -1tr', capture=True).stdout.strip().split('\n')[-1]
-        local(f'sudo psql -U {db_user} -d {db_name} < {last_dump}')
+        c.run('git checkout %s && git pull' % branch_name)
+        c.run('pip install -r requirements.txt')
+        c.run('./manage.py migrate')
+        c.run('./manage.py collectstatic --noinput')
 
 
 @task
-def deploy_local(branch=None):
-    branch = branch or 'main'
-
-    local('git checkout %s && git pull' % branch)
-    local('pip3 install -r requirements.txt')
-    local('./manage.py migrate')
-    local('./manage.py collectstatic --noinput')
+def check(c):
+    with c.prefix(VIRTUAL_ENV_ACTIVATE):
+        c.run('python manage.py check')
+        c.run('time flake8 ./core ./Api ./Admin')
 
 
 @task
-def check():
-    local('python manage.py check')
-    local('time flake8 ./core ./Api ./Admin')
-    local('python manage.py test')
-
-
-@task
-def create_graph_models(*args):
+def create_graph_models(c, *args):
     date = datetime.now().strftime("%Y-%m-%d_%H%M")
     dot_file_name = f'graphs/project_{date}.dot'
 
@@ -95,6 +83,7 @@ def create_graph_models(*args):
     if args:
         models = f' -I {",".join(args)} '
 
-    with cd(PROJECT_ROOT):
-        local('mkdir -p graphs')
-        local(f'./manage.py graph_models -a {models} -o {dot_file_name}')
+    with c.prefix(VIRTUAL_ENV_ACTIVATE):
+        with c.cd(PROJECT_ROOT):
+            c.run('mkdir -p graphs')
+            c.run(f'./manage.py graph_models -a {models} -o {dot_file_name}')

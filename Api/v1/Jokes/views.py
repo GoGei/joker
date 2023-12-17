@@ -149,5 +149,8 @@ class JokeViewSet(viewsets.ReadOnlyModelViewSet, MappedSerializerVMixin):
         except exceptions.TelegramConnectToBotException:
             return Response({'non_field_errors': ['Something went wrong! Please, try to send email later.']},
                             status=status.HTTP_400_BAD_REQUEST)
+        except ValueError:
+            return Response({'non_field_errors': ['Please, configure bot first.']},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'is_send': is_send, 'result': result}, status=status.HTTP_200_OK)

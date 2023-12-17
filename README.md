@@ -19,8 +19,8 @@ add hosts to **/etc/hosts** file:
 ## Database setup
 create DB
 ```sql
-create user joker with password 'password' superuser createdb;
-create database jokerdb with owner joker;
+create user joker with password 'joker-psw' superuser createdb;
+create database joker with owner joker;
 ```
 
 ## Env setup
@@ -43,17 +43,7 @@ cp config/settings_example.py config/local_settings.py
 fab runserver
 ```
 
-###dump current database to .sql script in dumps/ folder
-```bash
-fab dump_db
-```
-
-###restore last found .sql file in dumps/ folder to EMPTY database
-```bash
-fab restore_db
-```
-
-###deploy project
+### deploy project
 - branch (main by default)
 - git checkout and pull from the branch
 - install requirements.txt
@@ -63,12 +53,12 @@ fab restore_db
 fab deploy_local
 ```
 
-###scan code for PEP8
+### scan code for PEP8
 ```bash
 fab check
 ```
 
-###create class diagram of the project to graphs/
+### create class diagram of the project to graphs/
 ```bash
 fab create_graph_models
 ```

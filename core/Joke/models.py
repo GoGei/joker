@@ -74,7 +74,7 @@ class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
     @classmethod
     def annotate_qs_by_user(cls, qs, user=None):
         if not (user and user.is_authenticated):
-            qs = qs.annotate(is_liked=None)
+            qs = qs.annotate(is_liked=models.Value(None, output_field=models.NullBooleanField()))
             return qs
 
         qs = qs.annotate(
